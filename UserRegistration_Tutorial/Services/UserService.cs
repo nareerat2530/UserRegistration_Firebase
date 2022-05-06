@@ -20,7 +20,10 @@ namespace UserRegistration_Tutorial.Services
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var user = GetUser(id);
+            _context.Users.Remove(user);
+            _context.SaveChanges();
+
         }
 
         public IEnumerable<User> GetAll()
@@ -30,8 +33,8 @@ namespace UserRegistration_Tutorial.Services
 
         public User GetById(int id)
         {
-            return _context.Users.FirstOrDefault(x => x.Id == id);
-
+            return GetUser(id);
+           
         }
 
         public void Register(RegisterRequest model)
@@ -48,6 +51,16 @@ namespace UserRegistration_Tutorial.Services
             
             _context.Users.Add(user);
             _context.SaveChanges();
+        }
+
+        private User GetUser(int id)
+        {
+            var user = _context.Users.FirstOrDefault(x =>x.Id == id);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+            return user;
         }
     }
 }
