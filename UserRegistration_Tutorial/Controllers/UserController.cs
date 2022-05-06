@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserRegistration_Tutorial.Interfaces;
+using UserRegistration_Tutorial.Models;
 
 namespace UserRegistration_Tutorial.Controllers
 {
@@ -17,11 +18,19 @@ namespace UserRegistration_Tutorial.Controllers
         public IActionResult GetAll()
         {
             var getAllUsers = _userService.GetAll();
-            if(getAllUsers == null)
+            if (getAllUsers == null)
             {
                 return NotFound();
             }
             return Ok(getAllUsers);
         }
+        [HttpPost("register")]
+        public IActionResult Register(RegisterRequest model)
+        {
+            _userService.Register(model);
+            return Ok(new {message = "Register successfull" });
+        }
+        
+        
     }
 }
