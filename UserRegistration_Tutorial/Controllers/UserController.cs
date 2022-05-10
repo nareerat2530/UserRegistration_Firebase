@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using UserRegistration_Tutorial.Entities;
+using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
 
@@ -11,21 +13,28 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-       private readonly ILogger<UserController> _logger;
-        public UserController(IUserService userService, ILogger<UserController> logger)
+        private readonly ILogger<UserController> _logger;
+        
+        public UserController(IUserService userService,  ILogger<UserController> logger)
         {
             _userService = userService;
+           
             _logger = logger;
+
+            
         }
         [HttpGet]
         public IActionResult GetAll()
         {
             var getAllUsers = _userService.GetAll();
-            if(getAllUsers == null)
+            if (getAllUsers == null)
             {
                 return NotFound();
             }
             return Ok(getAllUsers);
+
+
+
         }
 
         [HttpPost("register")]
@@ -38,7 +47,7 @@ namespace UserRegistration_Tutorial.Controllers
         public IActionResult Update(UpdateRequest model, int id)
         {
             _userService.Update(model, id);
-            return Ok(new {message = "User updated successfully"});
+            return Ok(new { message = "User updated successfully" });
         }
 
         [HttpPost("Login")]
@@ -59,10 +68,12 @@ namespace UserRegistration_Tutorial.Controllers
         public IActionResult GetUserById(int id)
         {
             var result = _userService.GetById(id);
-            if(result == null)
+            if (result == null)
             {
-                return NotFound("user not found");
+                return NotFound("User not find");
+                
             }
+              
             return Ok(result);
         }
     }

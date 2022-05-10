@@ -15,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
 builder.Services.AddScoped<IUserService,UserService>();
 
+
+
 var app = builder.Build();
 
 
@@ -24,8 +26,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.ConfigureCustomException();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

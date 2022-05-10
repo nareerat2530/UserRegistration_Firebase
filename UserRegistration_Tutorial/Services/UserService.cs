@@ -20,12 +20,12 @@ namespace UserRegistration_Tutorial.Services
         public LoginResponse Authenticate(LoginRequest model)
         {
             var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
-             if (user == null)
-                {
-                    throw new AppException("Username or password is incorrect");
+            if (user == null)
+            {
+                throw new AppException("Username or password is incorrect");
 
 
-                }
+            }
             var response = new LoginResponse();
             {
                 response.LastName = user.LastName;
@@ -34,6 +34,10 @@ namespace UserRegistration_Tutorial.Services
 
             }
             return response;
+
+
+
+
         }
 
         public void Delete(int id)

@@ -1,26 +1,26 @@
-﻿using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using UserRegistration_Tutorial.Services;
 
 namespace UserRegistration_Tutorial.Helpers
 {
-    public class ExceptionHandlingMiddleware
+    public class ExceptionHandlingMiddleware 
     {
-        private readonly RequestDelegate _requestDelegate;
+        private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate requestDelegate, ILogger<ExceptionHandlingMiddleware> logger)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger  )
         {
-            _requestDelegate = requestDelegate;
+            _next = next;
             _logger = logger;
+
         }
 
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await _requestDelegate(context);
+                await _next(context);
             }
             catch (Exception error)
             {
@@ -30,20 +30,27 @@ namespace UserRegistration_Tutorial.Helpers
 
             }
         }
-       private async Task HandleException(HttpContext context, Exception error)
+       private static async Task HandleException(HttpContext context, Exception error)
         {
-            context.Response.ContentType = "application/json";
+            
             var response = context.Response;
+            response.ContentType = "application/json";
+            
             var errorService = new ErrorService
             {
                 Success = false
             };
-           
+            var result = JsonSerializer.Serialize(errorService);
+            await context.Response.WriteAsync(result);
+
             switch (error)
             {
                 case AppException e:
                    response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorService.Message = e.Message;
+                    //_ = result;
+                    
+                    
                     break;
 
                 case KeyNotFoundException e:
@@ -58,9 +65,8 @@ namespace UserRegistration_Tutorial.Helpers
 
             }
 
-            _logger.LogError(error.Message);
-            var result = System.Text.Json.JsonSerializer.Serialize(errorService);
-            await context.Response.WriteAsync(result);
+            
+            
         }
 
     }
