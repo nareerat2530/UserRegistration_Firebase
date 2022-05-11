@@ -11,6 +11,7 @@ namespace UserRegistration_Tutorial.Interfaces
         User GetById(int id);
         void Register(RegisterRequest model);
         void Delete(int id);
+        bool Update(UpdateRequest model, int id);
 
 
 

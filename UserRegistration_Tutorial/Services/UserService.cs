@@ -8,14 +8,36 @@ namespace UserRegistration_Tutorial.Services
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
+        
 
         public UserService(AppDbContext context)
         {
             _context = context;
+            
+            
+            
         }
         public LoginResponse Authenticate(LoginRequest model)
         {
-            throw new NotImplementedException();
+            var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
+            if (user == null)
+            {
+                throw new AppException("Username or password is incorrect");
+
+
+            }
+            var response = new LoginResponse();
+            {
+                response.LastName = user.LastName;
+                response.FirstName = user.FirstName;
+                response.UserName = user.UserName;
+
+            }
+            return response;
+
+
+
+
         }
 
         public void Delete(int id)
@@ -33,8 +55,8 @@ namespace UserRegistration_Tutorial.Services
 
         public User GetById(int id)
         {
-            return GetUser(id);
-           
+            return _context.Users.FirstOrDefault(x => x.Id == id);
+
         }
 
         public void Register(RegisterRequest model)
@@ -51,6 +73,32 @@ namespace UserRegistration_Tutorial.Services
             
             _context.Users.Add(user);
             _context.SaveChanges();
+        }
+
+       
+
+        public bool Update(UpdateRequest model, int id)
+        {
+            var user = GetUser(id);
+            try
+            {
+                if(user != null)
+                {
+                   
+
+                    user.FirstName = model.FirstName;
+                    user.LastName = model.LastName;
+                    user.UserName = model.UserName;
+                    user.PasswordHash = model.Password;
+                }
+                _context.Users.Update(user);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private User GetUser(int id)
