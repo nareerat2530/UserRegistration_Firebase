@@ -8,14 +8,14 @@ namespace UserRegistration_Tutorial.Services
     public class UserService : IUserService
     {
         private readonly AppDbContext _context;
-        
+
 
         public UserService(AppDbContext context)
         {
             _context = context;
-            
-            
-            
+
+
+
         }
         public LoginResponse Authenticate(LoginRequest model)
         {
@@ -23,8 +23,6 @@ namespace UserRegistration_Tutorial.Services
             if (user == null)
             {
                 throw new AppException("Username or password is incorrect");
-
-
             }
             var response = new LoginResponse();
             {
@@ -34,10 +32,6 @@ namespace UserRegistration_Tutorial.Services
 
             }
             return response;
-
-
-
-
         }
 
         public void Delete(int id)
@@ -47,60 +41,55 @@ namespace UserRegistration_Tutorial.Services
             _context.SaveChanges();
 
         }
-
         public IEnumerable<User> GetAll()
         {
-          return  _context.Users.ToList();
+            return _context.Users.ToList();
         }
 
         public User GetById(int id)
         {
-            return _context.Users.FirstOrDefault(x => x.Id == id);
+            //return _context.Users.FirstOrDefault(x => x.Id == id);
+            return GetUser(id);
 
         }
 
         public void Register(RegisterRequest model)
         {
-            if (_context.Users.Any(x => x.UserName == model.UserName)) throw new AppException($"Username {model.UserName} is already taken");
+            if (_context.Users.Any(x => x.UserName == model.UserName))
+                throw new AppException($"Username {model.UserName} is already taken");
 
             var user = new User
             {
-               
+
                 UserName = model.UserName,
                 FirstName = model.FirstName,
                 LastName = model.LastName
             };
-            
+
             _context.Users.Add(user);
             _context.SaveChanges();
         }
-
-       
-
-        public bool Update(UpdateRequest model, int id)
+        public void Update(int id, UpdateRequest model)
         {
             var user = GetUser(id);
-            try
-            {
-                if(user != null)
-                {
-                   
 
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
-                    user.UserName = model.UserName;
-                    user.PasswordHash = model.Password;
-                }
-                _context.Users.Update(user);
-                _context.SaveChanges();
-                return true;
-            }
-            catch
+            if (user != null && _context.Users.Any(u => u.UserName != model.UserName))
             {
-                return false;
+                throw new AppException($"Username {model.UserName} is already taken");
             }
+            var toUpdate = new User
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                UserName = model.UserName,
+                PasswordHash = model.Password,
+            };
+            
+            _context.Users.Update(user);
+            _context.SaveChanges();
+            
         }
-
+            
         private User GetUser(int id)
         {
             var user = _context.Users.FirstOrDefault(x =>x.Id == id);

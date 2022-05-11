@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UserRegistration_Tutorial.Entities;
-using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
 
@@ -18,10 +16,8 @@ namespace UserRegistration_Tutorial.Controllers
         public UserController(IUserService userService,  ILogger<UserController> logger)
         {
             _userService = userService;
-           
             _logger = logger;
 
-            
         }
         [HttpGet]
         public IActionResult GetAll()
@@ -32,9 +28,6 @@ namespace UserRegistration_Tutorial.Controllers
                 return NotFound();
             }
             return Ok(getAllUsers);
-
-
-
         }
 
         [HttpPost("register")]
@@ -43,10 +36,11 @@ namespace UserRegistration_Tutorial.Controllers
             _userService.Register(model);
             return Ok(new {message = "Registration sucessful"});
         }
+        
         [HttpPut("Update/{id}")]
-        public IActionResult Update(UpdateRequest model, int id)
+        public IActionResult Update(int id, [FromBody]UpdateRequest model)
         {
-            _userService.Update(model, id);
+            _userService.Update(id, model);
             return Ok(new { message = "User updated successfully" });
         }
 
@@ -64,6 +58,7 @@ namespace UserRegistration_Tutorial.Controllers
             _userService.Delete(id);
             return StatusCode(200, "successfully delete");
         }
+
         [HttpGet("{id}")]
         public IActionResult GetUserById(int id)
         {
@@ -71,18 +66,16 @@ namespace UserRegistration_Tutorial.Controllers
             if (result == null)
             {
                 return NotFound("User not find");
-                
+
             }
-              
+
             return Ok(result);
         }
-        [HttpPost("register")]
-        public IActionResult Register(RegisterRequest model)
-        {
-            _userService.Register(model);
-            return Ok(new {message = "Register successfull" });
-        }
-        
-        
+
+
+    
+
+
+
     }
 }

@@ -36,12 +36,12 @@ namespace UserRegistration_Tutorial.Helpers
             var response = context.Response;
             response.ContentType = "application/json";
             
-            var errorService = new ErrorService
+            var errorService = new Error
             {
+
                 Success = false
             };
-            var result = JsonSerializer.Serialize(errorService);
-            await context.Response.WriteAsync(result);
+            
 
             switch (error)
             {
@@ -65,8 +65,9 @@ namespace UserRegistration_Tutorial.Helpers
 
             }
 
-            
-            
+            var result = JsonSerializer.Serialize(errorService);
+            await context.Response.WriteAsync(result);
+
         }
 
     }

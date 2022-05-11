@@ -2,7 +2,7 @@
 
 namespace UserRegistration_Tutorial.Services
 {
-    public class ErrorService
+    public class Error
     {
         
             public string? Message { get; set; }
