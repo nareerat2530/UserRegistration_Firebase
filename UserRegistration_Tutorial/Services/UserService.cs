@@ -1,4 +1,5 @@
-﻿using UserRegistration_Tutorial.Entities;
+﻿using FirebaseAdmin.Auth;
+using UserRegistration_Tutorial.Entities;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
@@ -17,82 +18,90 @@ namespace UserRegistration_Tutorial.Services
 
 
         }
-        public LoginResponse Authenticate(LoginRequest model)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
-            if (user == null)
-            {
-                throw new AppException("Username or password is incorrect");
-            }
-            var response = new LoginResponse();
-            {
-                response.LastName = user.LastName;
-                response.FirstName = user.FirstName;
-                response.UserName = user.UserName;
+        //public LoginResponse Authenticate(LoginRequest model)
+        //{
+        //    //var user = _context.Users.FirstOrDefault(u => u.Email == model|| u.PasswordHash == model.Password);
+        //    //if (user == null)
+        //    //{
+        //    //    throw new AppException("Username or password is incorrect");
+        //    //}
+        //    //var response = new LoginResponse();
+        //    //{
+        //    //    response.LastName = user.LastName;
+        //    //    response.FirstName = user.FirstName;
+        //    //    response.UserName = user.UserName;
 
-            }
-            return response;
+        //    //}
+        //    //return response;
+        //}
+
+        public void Delete(string uid)
+        {
+            //var user = GetUserAsync(uid);
+            //_context.Users.Remove(user);
+            //_context.SaveChanges();
+
         }
 
-        public void Delete(int id)
-        {
-            var user = GetUser(id);
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-
-        }
+       
         public IEnumerable<User> GetAll()
         {
             return _context.Users.ToList();
         }
 
-        public User GetById(int id)
+        public Task< UserRecord> GetById(string uid)
         {
             //return _context.Users.FirstOrDefault(x => x.Id == id);
-            return GetUser(id);
+            return GetUserAsync(uid);
 
         }
 
         public void Register(RegisterRequest model)
         {
-            if (_context.Users.Any(x => x.UserName == model.UserName))
-                throw new AppException($"Username {model.UserName} is already taken");
+            //if (_context.Users.Any(x => x.UserName == model.UserName))
+            //    throw new AppException($"Username {model.UserName} is already taken");
 
-            var user = new User
-            {
+            //var user = new User
+            //{
 
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
+            //    UserName = model.UserName,
+            //    FirstName = model.FirstName,
+            //    LastName = model.LastName
+            //};
 
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            //_context.Users.Add(user);
+            //_context.SaveChanges();
         }
-        public void Update(int id, UpdateRequest model)
+        public async Task UpdateAsync(string uid, UpdateRequest model)
         {
-            var user = GetUser(id);
+            var user = GetUserAsync(uid);
 
-            if (user != null && _context.Users.Any(u => u.UserName != model.UserName))
+            //if (user != null && _context.Users.Any(u => u.UserName != model.UserName))
+            //{
+            //    throw new AppException($"Username {model.UserName} is already taken");
+            //}
+            UserRecordArgs updatedUser = new UserRecordArgs()
             {
-                throw new AppException($"Username {model.UserName} is already taken");
-            }
-            var toUpdate = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                UserName = model.UserName,
-                PasswordHash = model.Password,
+                Uid = uid,
+                Email = model.Email,
+                Password = model.Password,
+                DisplayName = model.UserName,
+              
+                
             };
-            
-            _context.Users.Update(user);
-            _context.SaveChanges();
-            
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+            // See the UserRecord reference doc for the contents of userRecord.
+            Console.WriteLine($"Successfully updated user: {userRecord.Uid}");
+
+
         }
-            
-        private User GetUser(int id)
+
+      
+
+        private async Task<UserRecord> GetUserAsync(string uid)
         {
-            var user = _context.Users.FirstOrDefault(x =>x.Id == id);
+            var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+            //var user = _context.Users.FirstOrDefault(x =>x.uid == uid);
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");
