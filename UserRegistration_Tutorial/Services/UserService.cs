@@ -1,6 +1,5 @@
 ﻿using FirebaseAdmin.Auth;
 using UserRegistration_Tutorial.Entities;
-using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
 
@@ -8,32 +7,41 @@ namespace UserRegistration_Tutorial.Services
 {
     public class UserService : IUserService
     {
-        private readonly AppDbContext _context;
-
-
-        public UserService(AppDbContext context)
+        public async Task GetAllUsersAsync()
         {
-            _context = context;
+            var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
+            var responses = pagedEnumerable.AsRawResponses().GetAsyncEnumerator();
+            while (await responses.MoveNextAsync())
+            {
+                ExportedUserRecords response = responses.Current;
+                foreach (ExportedUserRecord user in response.Users)
+                {
+                    Console.WriteLine($"User: {user.Uid}");
+                }
+            }
+
+            // Iterate through all users. This will still retrieve users in batches,
+            // buffering no more than 1000 users in memory at a time.
+            var enumerator = FirebaseAuth.DefaultInstance.ListUsersAsync(null).GetAsyncEnumerator();
+            while (await enumerator.MoveNextAsync())
+            {
+                ExportedUserRecord user = enumerator.Current;
+                Console.WriteLine($"User: {user.Uid}");
+            }
+            
+            
+           
+
         }
-       
 
         public async void Delete(string uid)
         {
             
             await FirebaseAuth.DefaultInstance.DeleteUserAsync(uid);
-            Console.WriteLine("Successfully deleted user.");
-
         }
-        public IEnumerable<User> GetAll()
-        {
-            return _context.Users.ToList();
-        }
-
         public async Task< UserRecord> GetById(string uid)
         {
-
-             return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-
+            return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
         }
 
         public async Task RegisterAsync(RegisterRequest model)
@@ -50,7 +58,6 @@ namespace UserRegistration_Tutorial.Services
         public async Task UpdateAsync(string uid, UpdateRequest model)
         {
             var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-
             UserRecordArgs updatedUser = new UserRecordArgs()
             {
                 
@@ -60,9 +67,32 @@ namespace UserRegistration_Tutorial.Services
               
             };
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
-            // See the UserRecord reference doc for the contents of userRecord.
-            Console.WriteLine($"Successfully updated user: {userRecord.Uid}");
+            
         }
-       
+        //public LoginResponse Authenticate(LoginRequest model)
+        //{
+        //    var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
+        //    if (user == null)
+        //    {
+        //        throw new AppException("Username or password is incorrect");
+
+
+        //    }
+        //    var response = new LoginResponse();
+        //    {
+        //        response.LastName = user.LastName;
+        //        response.FirstName = user.FirstName;
+        //        response.UserName = user.UserName;
+
+        //    }
+        //    return response;
+
+
+
+
+        //}
     }
+
+
 }
+

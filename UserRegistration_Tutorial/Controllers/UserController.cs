@@ -12,23 +12,20 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ILogger<UserController> _logger;
+        //private readonly ILogger<UserController> _logger;
         
         public UserController(IUserService userService,  ILogger<UserController> logger)
         {
             _userService = userService;
-            _logger = logger;
+            //_logger = logger;
 
         }
         [HttpGet]
-        //public async Task<IActionResult> GetAllAsync()
-        //{
-           
-        //    UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("Mf4X8iQakUOmergcwYXt4oSTjZ53");
-        //    return Ok(userRecord);
-            
-            
-        //}
+        public IActionResult GetAllUsersAsync()
+        {
+            var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
+            return Ok(pagedEnumerable);
+        }
 
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterRequest model)
@@ -44,7 +41,7 @@ namespace UserRegistration_Tutorial.Controllers
             return Ok(new { message = "User updated successfully" });
         }
 
-        //[HttpPost("Login")]
+        [HttpPost("Login")]
         //public IActionResult Login([FromBody] LoginRequest loginRequest)
         //{
         //    var response = _userService.Authenticate(loginRequest);
