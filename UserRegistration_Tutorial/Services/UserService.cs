@@ -57,16 +57,21 @@ namespace UserRegistration_Tutorial.Services
         }
         public async Task UpdateAsync(string uid, UpdateRequest model)
         {
-            var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-            UserRecordArgs updatedUser = new UserRecordArgs()
-            {
-                
-                Email = model.Email,
-                Password = model.Password,
-                DisplayName = model.UserName,
-              
-            };
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+          
+            
+                var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+                UserRecordArgs updatedUser = new UserRecordArgs()
+                {
+
+                    Email = model.Email,
+                    Password = model.Password,
+                    DisplayName = model.UserName,
+
+                };
+                UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+           
+            
+           
             
         }
         //public LoginResponse Authenticate(LoginRequest model)

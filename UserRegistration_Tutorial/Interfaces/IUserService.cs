@@ -14,6 +14,7 @@ namespace UserRegistration_Tutorial.Interfaces
         Task RegisterAsync(RegisterRequest model);
         void Delete(string uid);
         Task UpdateAsync(string uid, UpdateRequest model);
-        
+
+
     }
 }

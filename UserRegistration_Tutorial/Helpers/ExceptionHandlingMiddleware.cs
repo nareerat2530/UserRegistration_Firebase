@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FirebaseAdmin.Auth;
+using System.Net;
 using System.Text.Json;
 using UserRegistration_Tutorial.Services;
 
@@ -32,27 +33,31 @@ namespace UserRegistration_Tutorial.Helpers
         }
        private static async Task HandleException(HttpContext context, Exception error)
         {
-            
+
             var response = context.Response;
             response.ContentType = "application/json";
-            
+
             var errorService = new Error
             {
 
                 Success = false
             };
-            
+
+
 
             switch (error)
             {
                 case AppException e:
                    response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorService.Message = e.Message;
-                    //_ = result;
+                    
                     
                     
                     break;
-
+                case FirebaseAuthException e:
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorService.Message = "Could not find user";
+                    break;
                 case KeyNotFoundException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
                     errorService.Message = e.Message;

@@ -30,15 +30,36 @@ namespace UserRegistration_Tutorial.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterRequest model)
         {
-            _userService.RegisterAsync(model);
-            return Ok(new {message = "Registration sucessful"});
+            //Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
+            //var registerUser =  _userService.RegisterAsync(model);
+            //if(registerUser == null && User.FirstOrDefault(u => u.UserName == model.UserName))
+            //{
+            //    return StatusCode(500, "Email or Password is invalid");
+            //}
+            
+            //return Ok(new {message = "Registration sucessful"});
+            return Ok(model);
         }
         
         [HttpPut("Update/{id}")]
-        public IActionResult Update(string id, [FromBody]UpdateRequest model)
+        public async Task<IActionResult> UpdateAsync(string id, [FromBody]UpdateRequest model)
         {
-            _userService.UpdateAsync(id, model);
-            return Ok(new { message = "User updated successfully" });
+          
+                var user = await FirebaseAuth.DefaultInstance.GetUserAsync(id);
+                UserRecordArgs updatedUser = new UserRecordArgs()
+                {
+
+                    Email = model.Email,
+                    Password = model.Password,
+                    DisplayName = model.UserName,
+
+                };
+                UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+                return Ok(new { message = "User updated successfully" });
+            
+         
+            
+             
         }
 
         [HttpPost("Login")]
@@ -51,9 +72,10 @@ namespace UserRegistration_Tutorial.Controllers
 
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> DeleteAsync(string id)
         {
-            _userService.Delete(id);
+
+            await FirebaseAuth.DefaultInstance.DeleteUserAsync(id);
             return StatusCode(200, "successfully delete");
         }
 
@@ -61,6 +83,7 @@ namespace UserRegistration_Tutorial.Controllers
         public async Task<IActionResult> GetUserById(string uid)
         {
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+            
             return Ok(userRecord);
            
         }
