@@ -26,6 +26,7 @@ namespace UserRegistration_Tutorial.Services
             }
             var response = new LoginResponse();
             {
+                response.Id = user.Id;
                 response.LastName = user.LastName;
                 response.FirstName = user.FirstName;
                 response.UserName = user.UserName;
