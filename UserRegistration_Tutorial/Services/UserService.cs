@@ -1,4 +1,5 @@
-﻿using UserRegistration_Tutorial.Entities;
+﻿using FirebaseAdmin.Auth;
+using UserRegistration_Tutorial.Entities;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
@@ -13,33 +14,14 @@ namespace UserRegistration_Tutorial.Services
         public UserService(AppDbContext context)
         {
             _context = context;
-
-
-
         }
-        public LoginResponse Authenticate(LoginRequest model)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
-            if (user == null)
-            {
-                throw new AppException("Username or password is incorrect");
-            }
-            var response = new LoginResponse();
-            {
-                response.Id = user.Id;
-                response.LastName = user.LastName;
-                response.FirstName = user.FirstName;
-                response.UserName = user.UserName;
+       
 
-            }
-            return response;
-        }
-
-        public void Delete(int id)
+        public async void Delete(string uid)
         {
-            var user = GetUser(id);
-            _context.Users.Remove(user);
-            _context.SaveChanges();
+            
+            await FirebaseAuth.DefaultInstance.DeleteUserAsync(uid);
+            Console.WriteLine("Successfully deleted user.");
 
         }
         public IEnumerable<User> GetAll()
@@ -47,58 +29,40 @@ namespace UserRegistration_Tutorial.Services
             return _context.Users.ToList();
         }
 
-        public User GetById(int id)
+        public async Task< UserRecord> GetById(string uid)
         {
-            //return _context.Users.FirstOrDefault(x => x.Id == id);
-            return GetUser(id);
+
+             return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
 
         }
 
-        public void Register(RegisterRequest model)
+        public async Task RegisterAsync(RegisterRequest model)
         {
-            if (_context.Users.Any(x => x.UserName == model.UserName))
-                throw new AppException($"Username {model.UserName} is already taken");
-
-            var user = new User
+            UserRecordArgs user = new UserRecordArgs()
             {
-
-                UserName = model.UserName,
-                FirstName = model.FirstName,
-                LastName = model.LastName
+                Email = model.Email,
+                Password = model.Password,
+                DisplayName = model.UserName,
+               
             };
-
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
         }
-        public void Update(int id, UpdateRequest model)
+        public async Task UpdateAsync(string uid, UpdateRequest model)
         {
-            var user = GetUser(id);
+            var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
 
-            if (user != null && _context.Users.Any(u => u.UserName != model.UserName))
+            UserRecordArgs updatedUser = new UserRecordArgs()
             {
-                throw new AppException($"Username {model.UserName} is already taken");
-            }
-            var toUpdate = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                UserName = model.UserName,
-                PasswordHash = model.Password,
+                
+                Email = model.Email,
+                Password = model.Password,
+                DisplayName = model.UserName,
+              
             };
-            
-            _context.Users.Update(user);
-            _context.SaveChanges();
-            
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+            // See the UserRecord reference doc for the contents of userRecord.
+            Console.WriteLine($"Successfully updated user: {userRecord.Uid}");
         }
-            
-        private User GetUser(int id)
-        {
-            var user = _context.Users.FirstOrDefault(x =>x.Id == id);
-            if (user == null)
-            {
-                throw new KeyNotFoundException("User not found");
-            }
-            return user;
-        }
+       
     }
 }

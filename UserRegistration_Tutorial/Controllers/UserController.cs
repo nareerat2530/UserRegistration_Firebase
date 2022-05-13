@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UserRegistration_Tutorial.Entities;
 using UserRegistration_Tutorial.Interfaces;
@@ -20,56 +21,51 @@ namespace UserRegistration_Tutorial.Controllers
 
         }
         [HttpGet]
-        public IActionResult GetAll()
-        {
-            var getAllUsers = _userService.GetAll();
-            if (getAllUsers == null)
-            {
-                return NotFound();
-            }
-            return Ok(getAllUsers);
-        }
+        //public async Task<IActionResult> GetAllAsync()
+        //{
+           
+        //    UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("Mf4X8iQakUOmergcwYXt4oSTjZ53");
+        //    return Ok(userRecord);
+            
+            
+        //}
 
         [HttpPost("register")]
         public IActionResult Register([FromBody]RegisterRequest model)
         {
-            _userService.Register(model);
+            _userService.RegisterAsync(model);
             return Ok(new {message = "Registration sucessful"});
         }
         
         [HttpPut("Update/{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateRequest model)
+        public IActionResult Update(string id, [FromBody]UpdateRequest model)
         {
-            _userService.Update(id, model);
+            _userService.UpdateAsync(id, model);
             return Ok(new { message = "User updated successfully" });
         }
 
-        [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginRequest loginRequest)
-        {
-           var response = _userService.Authenticate(loginRequest);
-           return Ok(response);
+        //[HttpPost("Login")]
+        //public IActionResult Login([FromBody] LoginRequest loginRequest)
+        //{
+        //    var response = _userService.Authenticate(loginRequest);
+        //    return Ok(response);
 
-        }
-        
+        //}
+
+
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             _userService.Delete(id);
             return StatusCode(200, "successfully delete");
         }
 
-        [HttpGet("{id}")]
-        public IActionResult GetUserById(int id)
+        [HttpGet("{uid}")]
+        public async Task<IActionResult> GetUserById(string uid)
         {
-            var result = _userService.GetById(id);
-            if (result == null)
-            {
-                return NotFound("User not find");
-
-            }
-
-            return Ok(result);
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+            return Ok(userRecord);
+           
         }
 
 
