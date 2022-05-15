@@ -12,12 +12,12 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        //private readonly ILogger<UserController> _logger;
+       
         
         public UserController(IUserService userService,  ILogger<UserController> logger)
         {
             _userService = userService;
-            //_logger = logger;
+            
 
         }
         [HttpGet]
@@ -27,19 +27,7 @@ namespace UserRegistration_Tutorial.Controllers
             return Ok(pagedEnumerable);
         }
 
-        [HttpPost("register")]
-        public IActionResult Register([FromBody]RegisterRequest model)
-        {
-            //Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
-            //var registerUser =  _userService.RegisterAsync(model);
-            //if(registerUser == null && User.FirstOrDefault(u => u.UserName == model.UserName))
-            //{
-            //    return StatusCode(500, "Email or Password is invalid");
-            //}
-            
-            //return Ok(new {message = "Registration sucessful"});
-            return Ok(model);
-        }
+       
         
         [HttpPut("Update/{id}")]
         public async Task<IActionResult> UpdateAsync(string id, [FromBody]UpdateRequest model)
@@ -57,18 +45,32 @@ namespace UserRegistration_Tutorial.Controllers
                 UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
                 return Ok(new { message = "User updated successfully" });
             
-         
-            
-             
         }
 
-        [HttpPost("Login")]
-        //public IActionResult Login([FromBody] LoginRequest loginRequest)
-        //{
-        //    var response = _userService.Authenticate(loginRequest);
-        //    return Ok(response);
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
+        {
+            UserRecordArgs user = new UserRecordArgs()
+            {
+                Email = model.Email,
+                Password = model.Password,
+                DisplayName = model.UserName,
 
-        //}
+            };
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
+
+            return Ok(new {message = "Registration sucessful"});
+           
+        }
+
+
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
+        {
+            var response = _userService.Authenticate(loginRequest);
+            return Ok(response);
+
+        }
 
 
         [HttpDelete("{id}")]
@@ -88,7 +90,7 @@ namespace UserRegistration_Tutorial.Controllers
            
         }
 
-
+        
     
 
 

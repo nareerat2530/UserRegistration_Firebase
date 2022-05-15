@@ -28,11 +28,7 @@ namespace UserRegistration_Tutorial.Services
                 ExportedUserRecord user = enumerator.Current;
                 Console.WriteLine($"User: {user.Uid}");
             }
-            
-            
-           
-
-        }
+}
 
         public async void Delete(string uid)
         {
@@ -74,28 +70,28 @@ namespace UserRegistration_Tutorial.Services
            
             
         }
-        //public LoginResponse Authenticate(LoginRequest model)
-        //{
-        //    var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
-        //    if (user == null)
-        //    {
-        //        throw new AppException("Username or password is incorrect");
+        public LoginResponse Authenticate(LoginRequest model)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
+            if (user == null)
+            {
+                throw new AppException("Username or password is incorrect");
 
 
-        //    }
-        //    var response = new LoginResponse();
-        //    {
-        //        response.LastName = user.LastName;
-        //        response.FirstName = user.FirstName;
-        //        response.UserName = user.UserName;
+            }
+            var response = new LoginResponse();
+            {
+                response.LastName = user.LastName;
+                response.FirstName = user.FirstName;
+                response.UserName = user.UserName;
 
-        //    }
-        //    return response;
-
-
+            }
+            return response;
 
 
-        //}
+
+
+        }
     }
 
 
