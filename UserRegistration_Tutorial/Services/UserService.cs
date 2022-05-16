@@ -1,4 +1,6 @@
-﻿using FirebaseAdmin.Auth;
+﻿
+using FirebaseAdmin.Auth;
+using FirebaseAdmin.Auth.Hash;
 using UserRegistration_Tutorial.Entities;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
@@ -7,6 +9,31 @@ namespace UserRegistration_Tutorial.Services
 {
     public class UserService : IUserService
     {
+        private readonly IJwtUtils _jwtUtils;
+
+        public UserService(IJwtUtils jwtUtils)
+        {
+             _jwtUtils = jwtUtils;
+        }
+        //public  async Task<LoginResponse> Authenticate(string id, LoginRequest model)
+        //{
+
+        //    UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(id);
+        //    if (userRecord == null || model.Password == userRecord.)
+        //    { return null; }
+        //    var respone = new LoginResponse();
+        //    {
+        //       respone.UserName = model.UserName;
+        //        respone.Token = model.Token
+               
+        //    }
+            
+            
+              
+           
+
+
+        //}
         public async Task GetAllUsersAsync()
         {
             var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
@@ -28,17 +55,23 @@ namespace UserRegistration_Tutorial.Services
                 ExportedUserRecord user = enumerator.Current;
                 Console.WriteLine($"User: {user.Uid}");
             }
-}
+        }
 
         public async void Delete(string uid)
         {
-            
+
             await FirebaseAuth.DefaultInstance.DeleteUserAsync(uid);
         }
-        public async Task< UserRecord> GetById(string uid)
+        public async Task<UserRecord> GetById(string uid)
         {
             return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
         }
+        public async Task<UserRecord> GetByEmail(string email)
+        {
+            return  await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+
+        }
+
 
         public async Task RegisterAsync(RegisterRequest model)
         {
@@ -47,53 +80,28 @@ namespace UserRegistration_Tutorial.Services
                 Email = model.Email,
                 Password = model.Password,
                 DisplayName = model.UserName,
-               
+
             };
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
         }
         public async Task UpdateAsync(string uid, UpdateRequest model)
         {
-          
-            
-                var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-                UserRecordArgs updatedUser = new UserRecordArgs()
-                {
 
-                    Email = model.Email,
-                    Password = model.Password,
-                    DisplayName = model.UserName,
 
-                };
-                UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
-           
-            
-           
-            
-        }
-        public LoginResponse Authenticate(LoginRequest model)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.UserName == model.UserName || u.PasswordHash == model.Password);
-            if (user == null)
+            var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+            UserRecordArgs updatedUser = new UserRecordArgs()
             {
-                throw new AppException("Username or password is incorrect");
 
+                Email = model.Email,
+                Password = model.Password,
+                DisplayName = model.UserName,
 
-            }
-            var response = new LoginResponse();
-            {
-                response.LastName = user.LastName;
-                response.FirstName = user.FirstName;
-                response.UserName = user.UserName;
-
-            }
-            return response;
-
-
-
+            };
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
 
         }
+       
+
     }
-
-
 }
 

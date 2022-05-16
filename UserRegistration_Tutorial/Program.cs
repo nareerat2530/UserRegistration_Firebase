@@ -1,6 +1,9 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using UserRegistration_Tutorial.Authorization;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Services;
@@ -16,11 +19,28 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
 FirebaseApp.Create(new AppOptions()
 {
-    Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
+    Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
 });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+               .AddJwtBearer(options =>
+               {
+                   var firebaseProjectName = builder.Configuration["Firebase-dotnet"];
+                   options.Authority =
+                           "https://securetoken.google.com/Firebase-dotnet";
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = true,
+                       ValidIssuer = "https://securetoken.google.com/Firebase-dotnet",
+                       ValidateAudience = true,
+                       ValidAudience = "Firebase-dotnet",
+                       ValidateLifetime = true
+                   };
+               });
 
 //FirebaseApp.Create(new AppOptions()
 //{
@@ -47,6 +67,8 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseAuthentication();
+
 
 app.MapControllers();
 

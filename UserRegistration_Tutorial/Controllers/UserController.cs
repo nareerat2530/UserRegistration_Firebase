@@ -12,6 +12,7 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+
        
         
         public UserController(IUserService userService,  ILogger<UserController> logger)
@@ -64,13 +65,14 @@ namespace UserRegistration_Tutorial.Controllers
         }
 
 
-        [HttpPost("Login")]
-        public IActionResult Login([FromBody] LoginRequest loginRequest)
-        {
-            var response = _userService.Authenticate(loginRequest);
-            return Ok(response);
+        //[HttpPost("Login")]
+        //public async Task <IActionResult> Login( [FromBody] LoginRequest loginRequest)
+        //{
+          
 
-        }
+
+
+        //}
 
 
         [HttpDelete("{id}")]
@@ -85,13 +87,22 @@ namespace UserRegistration_Tutorial.Controllers
         public async Task<IActionResult> GetUserById(string uid)
         {
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-            
+
             return Ok(userRecord);
-           
+
         }
 
-        
-    
+        [HttpGet("{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+
+            return Ok(userRecord);
+
+        }
+
+
+
 
 
 
