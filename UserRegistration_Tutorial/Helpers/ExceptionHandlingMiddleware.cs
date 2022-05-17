@@ -56,7 +56,7 @@ namespace UserRegistration_Tutorial.Helpers
                     break;
                 case FirebaseAuthException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
-                    errorService.Message = "Could not find user";
+                    errorService.Message = "Something went wrong";
                     break;
                 case KeyNotFoundException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;

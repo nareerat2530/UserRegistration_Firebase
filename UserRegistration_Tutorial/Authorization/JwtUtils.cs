@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Options;
+﻿using FirebaseAdmin.Auth;
+using Google.Api.Gax;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -29,6 +31,8 @@ namespace UserRegistration_Tutorial.Authorization
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
+
+     
 
         public string? ValidateToken(string token)
         {

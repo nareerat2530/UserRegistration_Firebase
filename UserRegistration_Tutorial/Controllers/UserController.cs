@@ -12,15 +12,18 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-
-       
+        private readonly IJwtUtils _jwtUtils;
         
-        public UserController(IUserService userService,  ILogger<UserController> logger)
+        
+        public UserController(IUserService userService,  ILogger<UserController> logger, IJwtUtils jwtUtils)
         {
             _userService = userService;
-            
+            _jwtUtils = jwtUtils;
+           
+           
 
         }
+      
         [HttpGet]
         public IActionResult GetAllUsersAsync()
         {
@@ -60,19 +63,18 @@ namespace UserRegistration_Tutorial.Controllers
             };
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
 
+            
             return Ok(new {message = "Registration sucessful"});
            
         }
 
 
-        //[HttpPost("Login")]
-        //public async Task <IActionResult> Login( [FromBody] LoginRequest loginRequest)
-        //{
-          
+        
 
 
 
-        //}
+
+
 
 
         [HttpDelete("{id}")]
@@ -92,7 +94,7 @@ namespace UserRegistration_Tutorial.Controllers
 
         }
 
-        [HttpGet("{email}")]
+        [HttpGet("{menuId}/email")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);

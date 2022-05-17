@@ -5,9 +5,11 @@ namespace UserRegistration_Tutorial.Models
     public class LoginRequest
     {
         [Required]
-        public string UserName { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
 
         [Required]
-        public string Password { get; set; } = null!;
-    }
+        public string password { get; set; } = null!;
+
+        public bool returnSecureToken = true;
+        }
 }

@@ -1,4 +1,6 @@
-﻿using UserRegistration_Tutorial.Entities;
+﻿using FirebaseAdmin.Auth;
+using Google.Api.Gax;
+using UserRegistration_Tutorial.Entities;
 
 namespace UserRegistration_Tutorial.Interfaces
 {
@@ -6,5 +8,6 @@ namespace UserRegistration_Tutorial.Interfaces
     {
         public string GenerateToken(User user);
         public string? ValidateToken(string token);
+        
     }
 }

@@ -15,22 +15,14 @@ namespace UserRegistration_Tutorial.Services
         {
              _jwtUtils = jwtUtils;
         }
-        //public  async Task<LoginResponse> Authenticate(string id, LoginRequest model)
+        //public LoginResponse Authenticate(LoginRequest model)
         //{
 
-        //    UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(id);
-        //    if (userRecord == null || model.Password == userRecord.)
-        //    { return null; }
-        //    var respone = new LoginResponse();
-        //    {
-        //       respone.UserName = model.UserName;
-        //        respone.Token = model.Token
-               
-        //    }
-            
-            
-              
-           
+
+        //   https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?
+
+
+
 
 
         //}
@@ -66,11 +58,11 @@ namespace UserRegistration_Tutorial.Services
         {
             return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
         }
-        public async Task<UserRecord> GetByEmail(string email)
-        {
-            return  await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+        //public async Task<UserRecord> GetByEmail(string email)
+        //{
+        //    return  await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
 
-        }
+        //}
 
 
         public async Task RegisterAsync(RegisterRequest model)

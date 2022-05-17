@@ -23,13 +23,13 @@ builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 
 FirebaseApp.Create(new AppOptions()
 {
-    Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
+    Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>
                {
-                   var firebaseProjectName = builder.Configuration["Firebase-dotnet"];
+                   //var firebaseProjectName = builder.Configuration["Firebase-dotnet"];
                    options.Authority =
                            "https://securetoken.google.com/Firebase-dotnet";
                    options.TokenValidationParameters = new TokenValidationParameters
@@ -68,7 +68,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 app.UseAuthentication();
-
+app.UseMiddleware<JwtMiddleware>();
 
 app.MapControllers();
 
