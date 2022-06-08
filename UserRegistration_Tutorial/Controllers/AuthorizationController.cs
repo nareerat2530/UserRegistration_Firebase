@@ -1,8 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Firebase.Auth;
+using Firebase.Database;
+using FirebaseAdmin.Auth;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
+using FirebaseAuth = FirebaseAdmin.Auth.FirebaseAuth;
 
 namespace UserRegistration_Tutorial.Controllers
 {
@@ -17,29 +22,48 @@ namespace UserRegistration_Tutorial.Controllers
             _jwtUtils = jwtUtils;
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
+        {
+            UserRecordArgs user = new UserRecordArgs()
+            {
+                Email = model.Email,
+                Password = model.Password,
+                DisplayName = model.UserName,
+
+            };
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
+
+
+            return Ok(new { message = "Registration sucessful" });
+
+        }
+
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            //return Ok(_jwtUtils.GenerateToken( loginRequest));
 
-            var client = new HttpClient();
 
-            var logger = new LoginRequest
+            var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyAr2aApjyLC7sg8pLET0ePdsJSiGL6TLZw"));
+            var auth = await authProvider.SignInWithEmailAndPasswordAsync(loginRequest.email,loginRequest.password);
+            var firebase = new FirebaseClient(
+              "https://firebase-with-dotnet-default-rtdb.europe-west1.firebasedatabase.app/",
+            new FirebaseOptions
             {
-                email = loginRequest.email,
-                password = loginRequest.password,
-                returnSecureToken = loginRequest.returnSecureToken,
-            };
-
-            //var url = $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?keyAIzaSyAr2aApjyLC7sg8pLET0ePdsJSiGL6TLZw {logger}";
+                AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken)
+            });
 
 
+            
 
-            var bulle = await client.PostAsJsonAsync($"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAr2aApjyLC7sg8pLET0ePdsJSiGL6TLZw", logger);
-            var responseString = await bulle.Content.ReadAsStringAsync();
-            return Ok(responseString);
+           
+
+            return Ok(auth);
 
 
         }
+        
+
+
     }
 }

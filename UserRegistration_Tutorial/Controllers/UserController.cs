@@ -1,4 +1,5 @@
 ﻿using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UserRegistration_Tutorial.Entities;
@@ -25,9 +26,15 @@ namespace UserRegistration_Tutorial.Controllers
         }
       
         [HttpGet]
-        public IActionResult GetAllUsersAsync()
+       
+        public async Task<IActionResult> GetAllUsersAsync()
         {
+
+            var token = Request.Cookies["auth._token.local"]?.Split(" ").Last();
             var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
+
+            FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+            string uid = decodedToken.Uid;
             return Ok(pagedEnumerable);
         }
 
@@ -51,31 +58,7 @@ namespace UserRegistration_Tutorial.Controllers
             
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
-        {
-            UserRecordArgs user = new UserRecordArgs()
-            {
-                Email = model.Email,
-                Password = model.Password,
-                DisplayName = model.UserName,
-
-            };
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
-
-            
-            return Ok(new {message = "Registration sucessful"});
-           
-        }
-
-
-        
-
-
-
-
-
-
+       
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(string id)
@@ -85,10 +68,29 @@ namespace UserRegistration_Tutorial.Controllers
             return StatusCode(200, "successfully delete");
         }
 
-        [HttpGet("{uid}")]
+        [HttpGet("{uid?}")]
         public async Task<IActionResult> GetUserById(string uid)
         {
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+
+            return Ok(userRecord);
+
+        }
+
+        [HttpGet("currentUser")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+           // var token = Request.Cookies["auth._token.local"]?.Split(" ").Last();
+           // Console.WriteLine(Request.Cookies);
+           
+           //if(token == null)
+           // {
+           //     return Ok("banan");
+           // }
+
+           // FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+           // string uid = decodedToken.Uid;
+            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("AXoCIJmJkmUFqsxDOajzgVyBwk93");
 
             return Ok(userRecord);
 
@@ -102,6 +104,11 @@ namespace UserRegistration_Tutorial.Controllers
             return Ok(userRecord);
 
         }
+        //public async Task<string> VerifyToken(string idToken)
+        //{
+        //    var token = Request.Cookies["auth._token.local"]?.Split(" ").Last();
+
+        //}
 
 
 

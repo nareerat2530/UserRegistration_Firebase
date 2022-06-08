@@ -9,23 +9,9 @@ namespace UserRegistration_Tutorial.Services
 {
     public class UserService : IUserService
     {
-        private readonly IJwtUtils _jwtUtils;
+       
 
-        public UserService(IJwtUtils jwtUtils)
-        {
-             _jwtUtils = jwtUtils;
-        }
-        //public LoginResponse Authenticate(LoginRequest model)
-        //{
-
-
-        //   https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?
-
-
-
-
-
-        //}
+      
         public async Task GetAllUsersAsync()
         {
             var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
@@ -58,11 +44,7 @@ namespace UserRegistration_Tutorial.Services
         {
             return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
         }
-        //public async Task<UserRecord> GetByEmail(string email)
-        //{
-        //    return  await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-
-        //}
+        
 
 
         public async Task RegisterAsync(RegisterRequest model)

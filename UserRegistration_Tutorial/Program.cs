@@ -3,6 +3,8 @@ using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using UserRegistration_Tutorial.Authorization;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
@@ -24,6 +26,18 @@ builder.Services.AddScoped<IJwtUtils, JwtUtils>();
 FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
+    ProjectId  = "firebase-with-dotnet",
+});
+builder.Services.AddSwaggerGen(options => {
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -31,21 +45,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                {
                    //var firebaseProjectName = builder.Configuration["Firebase-dotnet"];
                    options.Authority =
-                           "https://securetoken.google.com/Firebase-dotnet";
+                           "https://securetoken.google.com/firebase-with-dotnet";
                    options.TokenValidationParameters = new TokenValidationParameters
                    {
                        ValidateIssuer = true,
-                       ValidIssuer = "https://securetoken.google.com/Firebase-dotnet",
+                       ValidIssuer = "https://securetoken.google.com/firebase-with-dotnet",
                        ValidateAudience = true,
-                       ValidAudience = "Firebase-dotnet",
+                       ValidAudience = "firebase-with-dotnet",
                        ValidateLifetime = true
                    };
                });
 
-//FirebaseApp.Create(new AppOptions()
-//{
-//    Credential = GoogleCredential.FromFile("path/to/refreshToken.json"),
-//});
+
 
 
 var app = builder.Build();
@@ -66,9 +77,10 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
-app.UseMiddleware<JwtMiddleware>();
+
+app.UseAuthorization();
+//app.UseMiddleware<JwtMiddleware>();
 
 app.MapControllers();
 

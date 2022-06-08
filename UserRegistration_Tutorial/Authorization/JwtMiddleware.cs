@@ -1,4 +1,5 @@
-﻿using UserRegistration_Tutorial.Interfaces;
+﻿using FirebaseAdmin.Auth;
+using UserRegistration_Tutorial.Interfaces;
 
 namespace UserRegistration_Tutorial.Authorization
 {
@@ -10,15 +11,18 @@ namespace UserRegistration_Tutorial.Authorization
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context,IUserService userService, IJwtUtils jwtUtils)
-        {
-            var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();   
-            var userId = jwtUtils.ValidateToken(token);
-            if(userId != null)
-            {
-                context.Items["User"] = userService.GetById(token);
-            }
-            await _next(context);
-        }
+        //public async Task Invoke(HttpContext context)
+        //{
+        //    var token = context.Request.Cookies["auth._token.local"]?.Split(" ").Last();
+
+        //    //var userId = jwtUtils.ValidateToken(token);
+        //    //if (userId != null)
+        //    //{
+        //    //    context.Items["User"] = userService.GetById(token);
+        //    //}
+        //    FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+        //      string uid = decodedToken.Uid;
+        //    await _next(context);
+        //}
     }
 }

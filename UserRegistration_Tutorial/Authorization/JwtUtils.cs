@@ -18,52 +18,53 @@ namespace UserRegistration_Tutorial.Authorization
         {
             _appSetting = appSetting.Value;
         }
-        public string GenerateToken(User user)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSetting.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim("uid", user.uid.ToString()) }),
-                Expires = DateTime.UtcNow.AddDays(5),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
+        //public string GenerateToken(User user)
+        //{
+        //    var tokenHandler = new JwtSecurityTokenHandler();
+        //    var key = Encoding.ASCII.GetBytes(_appSetting.Secret);
+        //    var tokenDescriptor = new SecurityTokenDescriptor
+        //    {
+        //        Subject = new ClaimsIdentity(new[] { new Claim("uid", user.uid.ToString()) }),
+        //        Expires = DateTime.UtcNow.AddDays(5),
+        //        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //    };
+        //    var token = tokenHandler.CreateToken(tokenDescriptor);
+        //    return tokenHandler.WriteToken(token);
+        //}
 
      
 
-        public string? ValidateToken(string token)
-        {
-            if (token == null)
-            {
-                return null;
-            }
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSetting.Secret);
-            try
-            {
-                tokenHandler.ValidateToken(token, new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidIssuer = "https://securetoken.google.com/Firebase-dotnet",
-                    ValidateAudience = true,
-                    ValidAudience = "Firebase-dotnet",
-                    ClockSkew = TimeSpan.Zero
-                }, out SecurityToken validatedToken);
-                var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = jwtToken.Claims.First(x => x.Type == "uid").Value;
-
-                return userId;
-            }
+    //    public string? ValidateToken(string token)
+    //    {
+    //        if (token == null)
+    //        {
+    //            return null;
+    //        }
+    //        var tokenHandler = new JwtSecurityTokenHandler();
+    //        var key = Encoding.ASCII.GetBytes(_appSetting.Secret);
+    //        try
+    //        {
+    //            tokenHandler.ValidateToken(token, new TokenValidationParameters
+    //            {
+    //                ValidateIssuerSigningKey = true,
+    //                IssuerSigningKey = new SymmetricSecurityKey(key),
+    //                ValidIssuer = "https://securetoken.google.com/Firebase-dotnet",
+    //                ValidateAudience = true,
+    //                ValidAudience = "Firebase-dotnet",
+    //                ClockSkew = TimeSpan.Zero
+    //            }, out SecurityToken validatedToken);
+    //            var jwtToken = (JwtSecurityToken)validatedToken;
+    //            var userId = jwtToken.Claims.First(x => x.Type == "uid").Value;
+               
+                
+    //            return userId;
+    //        }
             
-            catch
-            {
-                return null;
-            }
+    //        catch
+    //        {
+    //            return null;
+    //        }
 
-        }
+    //    }
     }
 }
