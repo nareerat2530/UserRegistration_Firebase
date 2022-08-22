@@ -13,18 +13,17 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IJwtUtils _jwtUtils;
+       
         
         
-        public UserController(IUserService userService,  ILogger<UserController> logger, IJwtUtils jwtUtils)
+        public UserController(IUserService userService,  ILogger<UserController> logger)
         {
             _userService = userService;
-            _jwtUtils = jwtUtils;
            
            
 
         }
-      
+        [Authorize]
         [HttpGet]
        
         public async Task<IActionResult> GetAllUsersAsync()
@@ -77,24 +76,7 @@ namespace UserRegistration_Tutorial.Controllers
 
         }
 
-        [HttpGet("currentUser")]
-        public async Task<IActionResult> GetCurrentUser()
-        {
-           // var token = Request.Cookies["auth._token.local"]?.Split(" ").Last();
-           // Console.WriteLine(Request.Cookies);
-           
-           //if(token == null)
-           // {
-           //     return Ok("banan");
-           // }
-
-           // FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
-           // string uid = decodedToken.Uid;
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync("AXoCIJmJkmUFqsxDOajzgVyBwk93");
-
-            return Ok(userRecord);
-
-        }
+      
 
         [HttpGet("{menuId}/email")]
         public async Task<IActionResult> GetUserByEmail(string email)
@@ -104,11 +86,7 @@ namespace UserRegistration_Tutorial.Controllers
             return Ok(userRecord);
 
         }
-        //public async Task<string> VerifyToken(string idToken)
-        //{
-        //    var token = Request.Cookies["auth._token.local"]?.Split(" ").Last();
-
-        //}
+       
 
 
 

@@ -15,12 +15,7 @@ namespace UserRegistration_Tutorial.Controllers
     [ApiController]
     public class Authentication_Controller : ControllerBase
     {
-        private readonly IJwtUtils _jwtUtils;
-
-        public Authentication_Controller(IJwtUtils jwtUtils )
-        {
-            _jwtUtils = jwtUtils;
-        }
+       
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)

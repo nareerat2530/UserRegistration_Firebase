@@ -21,24 +21,42 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
 builder.Services.AddScoped<IUserService,UserService>();
-builder.Services.AddScoped<IJwtUtils, JwtUtils>();
+
 
 FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
     ProjectId  = "firebase-with-dotnet",
 });
-builder.Services.AddSwaggerGen(options => {
-    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+builder.Services.AddSwaggerGen(option =>
+{
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
         In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
     });
 
-    options.OperationFilter<SecurityRequirementsOperationFilter>();
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
 });
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>

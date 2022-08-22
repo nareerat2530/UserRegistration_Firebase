@@ -56,7 +56,7 @@ namespace UserRegistration_Tutorial.Helpers
                     break;
                 case FirebaseAuthException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
-                    errorService.Message = "Something went wrong";
+                    errorService.Message = "Something went wrong!";
                     break;
                 case KeyNotFoundException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
@@ -65,7 +65,7 @@ namespace UserRegistration_Tutorial.Helpers
 
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    errorService.Message = "Internal Server errors";
+                    errorService.Message = "Something went wrong. Please try again!";
                     break;
 
             }
