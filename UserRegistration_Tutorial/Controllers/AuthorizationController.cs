@@ -1,11 +1,7 @@
 ﻿using Firebase.Auth;
 using Firebase.Database;
 using FirebaseAdmin.Auth;
-
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Json;
-using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
 using FirebaseAuth = FirebaseAdmin.Auth.FirebaseAuth;
 

@@ -1,8 +1,6 @@
 ﻿using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UserRegistration_Tutorial.Entities;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
 
