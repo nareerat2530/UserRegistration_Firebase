@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
-using UserRegistration_Tutorial.Authorization;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Services;
@@ -21,19 +19,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
-builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
-    ProjectId  = "firebase-with-dotnet",
+    ProjectId = "firebase-with-dotnet",
 });
 builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
     {
         ProjectId = "firebase-with-dotnet",
-        Credential = GoogleCredential.FromFile(@"C:\Users\twish\Downloads\firebase-with-dotnet-firebase-adminsdk-ncdij-f6d9dcd801.json"),
+        Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
         // <-- service account json file
     }.Build()
 );
@@ -103,7 +101,7 @@ app.UseCors(x => x
        .AllowAnyMethod()
        .AllowAnyHeader());
 
-//app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

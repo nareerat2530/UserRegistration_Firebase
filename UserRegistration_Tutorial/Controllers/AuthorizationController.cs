@@ -11,7 +11,7 @@ namespace UserRegistration_Tutorial.Controllers
     [ApiController]
     public class Authentication_Controller : ControllerBase
     {
-       
+
 
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
@@ -36,7 +36,7 @@ namespace UserRegistration_Tutorial.Controllers
 
 
             var authProvider = new FirebaseAuthProvider(new FirebaseConfig("AIzaSyAr2aApjyLC7sg8pLET0ePdsJSiGL6TLZw"));
-            var auth = await authProvider.SignInWithEmailAndPasswordAsync(loginRequest.email,loginRequest.password);
+            var auth = await authProvider.SignInWithEmailAndPasswordAsync(loginRequest.email, loginRequest.password);
             var firebase = new FirebaseClient(
               "https://firebase-with-dotnet-default-rtdb.europe-west1.firebasedatabase.app/",
             new FirebaseOptions
@@ -44,16 +44,9 @@ namespace UserRegistration_Tutorial.Controllers
                 AuthTokenAsyncFactory = () => Task.FromResult(auth.FirebaseToken)
             });
 
-
-            
-
-           
-
             return Ok(auth);
-
-
         }
-        
+
 
 
     }

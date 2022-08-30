@@ -1,7 +1,4 @@
-﻿using FirebaseAdmin.Auth;
-using UserRegistration_Tutorial.Interfaces;
-
-namespace UserRegistration_Tutorial.Authorization
+﻿namespace UserRegistration_Tutorial.Authorization
 {
     public class JwtMiddleware
     {

@@ -11,5 +11,5 @@ namespace UserRegistration_Tutorial.Models
         public string password { get; set; } = null!;
 
         public bool returnSecureToken = true;
-        }
+    }
 }

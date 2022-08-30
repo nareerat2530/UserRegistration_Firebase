@@ -5,13 +5,13 @@ using UserRegistration_Tutorial.Models.Events;
 namespace UserRegistration_Tutorial.Services
 {
 
-    
+
     public class EventService : IEvent
 
     {
-        readonly FirestoreDb _db = FirestoreDb.Create("firebase - with - dotnet");
+        readonly FirestoreDb _db;
 
-        public EventService(FirestoreDb db )
+        public EventService(FirestoreDb db)
         {
             _db = db;
         }
@@ -21,20 +21,7 @@ namespace UserRegistration_Tutorial.Services
             throw new NotImplementedException();
         }
 
-        //        public async Task AddNewEvent(Events events)
-        //        {
-        //            DocumentReference docRef = _db.Collection("calEvent").Document("alovelace");
-        //            Dictionary<string, object> Event = new Dictionary<string, object>
-        //            {
-
-
-
-        //            }
-        //{              
-
-        //};
-        //            await docRef.SetAsync(Event);
-        //        }
+      
 
         public bool DeleteEventsAsync(Events events)
         {
@@ -43,7 +30,7 @@ namespace UserRegistration_Tutorial.Services
 
         public Task<IEnumerable<Events>> GetEventsAsync()
         {
-           throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public Task<Events> GetEventsByIdAsync(int id)

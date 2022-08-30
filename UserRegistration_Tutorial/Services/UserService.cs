@@ -1,7 +1,5 @@
 ﻿
 using FirebaseAdmin.Auth;
-using FirebaseAdmin.Auth.Hash;
-using UserRegistration_Tutorial.Entities;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
 
@@ -9,9 +7,6 @@ namespace UserRegistration_Tutorial.Services
 {
     public class UserService : IUserService
     {
-       
-
-      
         public async Task GetAllUsersAsync()
         {
             var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
@@ -25,8 +20,6 @@ namespace UserRegistration_Tutorial.Services
                 }
             }
 
-            // Iterate through all users. This will still retrieve users in batches,
-            // buffering no more than 1000 users in memory at a time.
             var enumerator = FirebaseAuth.DefaultInstance.ListUsersAsync(null).GetAsyncEnumerator();
             while (await enumerator.MoveNextAsync())
             {
@@ -44,8 +37,6 @@ namespace UserRegistration_Tutorial.Services
         {
             return await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
         }
-        
-
 
         public async Task RegisterAsync(RegisterRequest model)
         {
@@ -74,7 +65,7 @@ namespace UserRegistration_Tutorial.Services
             UserRecord userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
 
         }
-       
+
 
     }
 }

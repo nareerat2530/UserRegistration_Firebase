@@ -5,12 +5,12 @@ using UserRegistration_Tutorial.Services;
 
 namespace UserRegistration_Tutorial.Helpers
 {
-    public class ExceptionHandlingMiddleware 
+    public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger  )
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -25,13 +25,13 @@ namespace UserRegistration_Tutorial.Helpers
             }
             catch (Exception error)
             {
-               await HandleException(context, error);
+                await HandleException(context, error);
 
-               
+
 
             }
         }
-       private static async Task HandleException(HttpContext context, Exception error)
+        private static async Task HandleException(HttpContext context, Exception error)
         {
 
             var response = context.Response;
@@ -48,11 +48,11 @@ namespace UserRegistration_Tutorial.Helpers
             switch (error)
             {
                 case AppException e:
-                   response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
                     errorService.Message = e.Message;
-                    
-                    
-                    
+
+
+
                     break;
                 case FirebaseAuthException e:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
