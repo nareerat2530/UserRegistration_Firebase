@@ -21,7 +21,7 @@ namespace UserRegistration_Tutorial.Controllers
            
 
         }
-        [Authorize]
+        //[Authorize]
         [HttpGet]
        
         public async Task<IActionResult> GetAllUsersAsync()
