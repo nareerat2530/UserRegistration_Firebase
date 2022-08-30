@@ -16,20 +16,25 @@ namespace UserRegistration_Tutorial.Services
             _db = db;
         }
 
-        public async Task AddNewEvent(Events events)
+        public Task AddNewEvent()
         {
-            DocumentReference docRef = _db.Collection("calEvent").Document("alovelace");
-            Dictionary<string, object> Event = new Dictionary<string, object>
-            {
-             
-              
-
-            }
-{              
-                
-};
-            await docRef.SetAsync(Event);
+            throw new NotImplementedException();
         }
+
+        //        public async Task AddNewEvent(Events events)
+        //        {
+        //            DocumentReference docRef = _db.Collection("calEvent").Document("alovelace");
+        //            Dictionary<string, object> Event = new Dictionary<string, object>
+        //            {
+
+
+
+        //            }
+        //{              
+
+        //};
+        //            await docRef.SetAsync(Event);
+        //        }
 
         public bool DeleteEventsAsync(Events events)
         {
