@@ -21,6 +21,21 @@ namespace UserRegistration_Tutorial.Services
             throw new NotImplementedException();
         }
 
+        //        public async Task AddNewEvent(Events events)
+        //        {
+        //            DocumentReference docRef = _db.Collection("calEvent").Document("alovelace");
+        //            Dictionary<string, object> Event = new Dictionary<string, object>
+        //            {
+
+
+
+        //            }
+        //{              
+
+        //};
+        //            await docRef.SetAsync(Event);
+        //        }
+
         public bool DeleteEventsAsync(Events events)
         {
             throw new NotImplementedException();

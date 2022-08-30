@@ -1,5 +1,6 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
+using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -28,8 +29,19 @@ FirebaseApp.Create(new AppOptions()
     Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
     ProjectId  = "firebase-with-dotnet",
 });
+builder.Services.AddSingleton(_ =>
+    new FirestoreDbBuilder
+    {
+        ProjectId = "firebase-with-dotnet",
+        Credential = GoogleCredential.FromFile(@"C:\Users\twish\Downloads\firebase-with-dotnet-firebase-adminsdk-ncdij-f6d9dcd801.json"),
+        // <-- service account json file
+    }.Build()
+);
 builder.Services.AddSwaggerGen(option =>
 {
+
+
+
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -91,7 +103,7 @@ app.UseCors(x => x
        .AllowAnyMethod()
        .AllowAnyHeader());
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+//app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
