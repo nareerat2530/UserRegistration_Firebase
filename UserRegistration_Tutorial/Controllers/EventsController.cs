@@ -14,7 +14,7 @@ namespace UserRegistration_Tutorial.Controllers
             _db = db;
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> AddEvent([FromBody] EventsViewModel model)
         {
 
@@ -24,8 +24,8 @@ namespace UserRegistration_Tutorial.Controllers
             {
 
                 Description = model.Description,
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
+                StartDate = model.StartDate.ToUniversalTime(),
+                EndDate = model.EndDate.ToUniversalTime(),
             };
             await docRef.SetAsync(events);
 
