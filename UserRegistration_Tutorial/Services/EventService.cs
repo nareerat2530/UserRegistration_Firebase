@@ -21,7 +21,7 @@ namespace UserRegistration_Tutorial.Services
             throw new NotImplementedException();
         }
 
-      
+
 
         public bool DeleteEventsAsync(Events events)
         {

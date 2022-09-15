@@ -11,27 +11,20 @@ namespace UserRegistration_Tutorial.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-
-
-
         public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
 
-
-
         }
-        [Authorize]
-        [HttpGet]
 
+
+        [HttpGet]
+        [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
         public async Task<IActionResult> GetAllUsersAsync()
         {
 
-            var token = Request.Cookies["auth._token.local"]?.Split(" ").Last();
-            var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
 
-            FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
-            string uid = decodedToken.Uid;
+            var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
             return Ok(pagedEnumerable);
         }
 
