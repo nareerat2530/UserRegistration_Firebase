@@ -1,15 +1,17 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UserRegistration_Tutorial.Authentication;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 
@@ -22,19 +24,26 @@ builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsett
 builder.Services.AddScoped<IUserService, UserService>();
 
 
-FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
-    ProjectId = "firebase-with-dotnet",
-});
+
+builder.Services.AddSingleton(_ => FirebaseApp.Create(
+    new AppOptions()
+    {
+        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
+        ProjectId = "firebase-with-dotnet",
+    })
+);
 builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
     {
         ProjectId = "firebase-with-dotnet",
-        Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
+        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
         // <-- service account json file
     }.Build()
 );
+
+builder.Services.AddAuthentication("FirebaseAuthentication")
+    .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>("FirebaseAuthentication", (o) => { });
+
 builder.Services.AddSwaggerGen(option =>
 {
 
@@ -68,25 +77,6 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-               .AddJwtBearer(options =>
-               {
-                   //var firebaseProjectName = builder.Configuration["Firebase-dotnet"];
-                   options.Authority =
-                           "https://securetoken.google.com/firebase-with-dotnet";
-                   options.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateIssuer = true,
-                       ValidIssuer = "https://securetoken.google.com/firebase-with-dotnet",
-                       ValidateAudience = true,
-                       ValidAudience = "firebase-with-dotnet",
-                       ValidateLifetime = true
-                   };
-               });
-
-
-
-
 var app = builder.Build();
 
 
@@ -106,7 +96,6 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 //app.UseMiddleware<JwtMiddleware>();
 
