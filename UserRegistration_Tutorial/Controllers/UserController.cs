@@ -1,4 +1,5 @@
 ﻿using FirebaseAdmin.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models;
@@ -20,7 +21,7 @@ namespace UserRegistration_Tutorial.Controllers
 
 
         }
-        //[Authorize]
+        [Authorize]
         [HttpGet]
 
         public async Task<IActionResult> GetAllUsersAsync()

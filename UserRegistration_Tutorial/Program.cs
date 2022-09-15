@@ -24,14 +24,14 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 FirebaseApp.Create(new AppOptions()
 {
-    Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
+    Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
     ProjectId = "firebase-with-dotnet",
 });
 builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
     {
         ProjectId = "firebase-with-dotnet",
-        Credential = GoogleCredential.FromFile(@"C:\Users\nareerat.srisai\source\firebase-with-dotnet-firebase-adminsdk-ncdij-528bfe8b81.json"),
+        Credential = GoogleCredential.FromFile(@"C:\Users\twish\Downloads\firebase-with-dotnet-firebase-adminsdk-ncdij-f6d9dcd801.json"),
         // <-- service account json file
     }.Build()
 );
