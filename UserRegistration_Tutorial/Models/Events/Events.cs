@@ -7,6 +7,9 @@ namespace UserRegistration_Tutorial.Models.Events
     {
 
 
+        [FirestoreDocumentId]
+        public string Id { get; set; }
+
         [FirestoreProperty]
         public string Description { get; set; } = string.Empty;
 

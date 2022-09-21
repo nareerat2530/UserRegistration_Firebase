@@ -44,8 +44,8 @@ namespace UserRegistration_Tutorial.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteEvent(string id)
         {
-            DocumentReference cityRef = _db.Collection("calEvent").Document(id);
-            await cityRef.DeleteAsync();
+            DocumentReference eventRef = _db.Collection("calEvent").Document(id);
+            await eventRef.DeleteAsync();
             return Ok();
         }
 
