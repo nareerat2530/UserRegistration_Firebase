@@ -24,19 +24,16 @@ builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsett
 builder.Services.AddScoped<IUserService, UserService>();
 
 
-
-builder.Services.AddSingleton(_ => FirebaseApp.Create(
-    new AppOptions()
-    {
-        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
-        ProjectId = "firebase-with-dotnet",
-    })
-);
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
+    ProjectId = "firebase-with-dotnet",
+});
 builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
     {
         ProjectId = "firebase-with-dotnet",
-        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
+        Credential = GoogleCredential.FromFile(@"C:\Users\twish\Downloads\firebase-with-dotnet-firebase-adminsdk-ncdij-f6d9dcd801.json"),
         // <-- service account json file
     }.Build()
 );
