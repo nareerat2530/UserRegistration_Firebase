@@ -24,8 +24,8 @@ namespace UserRegistration_Tutorial.Controllers
             {
 
                 Description = model.Description,
-                StartDate = model.StartDate.ToUniversalTime(),
-                EndDate = model.EndDate.ToUniversalTime(),
+                startDate = model.startDate.ToUniversalTime(),
+                
             };
             await docRef.SetAsync(events);
 
@@ -58,8 +58,8 @@ namespace UserRegistration_Tutorial.Controllers
             {
 
                 Description = model.Description,
-                StartDate = model.StartDate,
-                EndDate = model.EndDate,
+                startDate = model.startDate,
+              
             };
 
             await docRef.SetAsync(updateEvents);
