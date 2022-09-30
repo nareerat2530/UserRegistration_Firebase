@@ -58,7 +58,7 @@ namespace UserRegistration_Tutorial.Controllers
             {
 
                 Description = model.Description,
-                startDate = model.startDate,
+                startDate = model.startDate.ToUniversalTime()
               
             };
 
