@@ -24,7 +24,7 @@ namespace UserRegistration_Tutorial.Controllers
         {
 
 
-            var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
+            var pagedEnumerable =  FirebaseAuth.DefaultInstance.ListUsersAsync(null);
             return Ok(pagedEnumerable);
         }
 
@@ -51,6 +51,7 @@ namespace UserRegistration_Tutorial.Controllers
 
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
         public async Task<IActionResult> DeleteAsync(string id)
         {
 
