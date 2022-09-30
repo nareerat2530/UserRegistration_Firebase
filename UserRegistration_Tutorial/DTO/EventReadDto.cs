@@ -2,9 +2,9 @@
 
 namespace UserRegistration_Tutorial.DTO
 {
-    public class EventPostDto
+    public class EventReadDto
     {
-       
+        public string Id { get; set; }
   
         public string Description { get; set; } = string.Empty;
 
