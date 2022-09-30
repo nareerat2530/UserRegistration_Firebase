@@ -2,10 +2,10 @@
 {
     public class EventsViewModel
     {
-
-        public string Description { get; set; } = string.Empty;
-        public DateTime startDate { get; set; }
        
+        public string Description { get; set; } = string.Empty;
+        public DateTime StartDate { get; set; }
+        
 
     }
 }

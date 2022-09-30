@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using UserRegistration_Tutorial.Authentication;
 using UserRegistration_Tutorial.Helpers;
 using UserRegistration_Tutorial.Interfaces;
+using UserRegistration_Tutorial.Mapper;
 using UserRegistration_Tutorial.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,13 +23,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<EventsMapper>();
 
 
-builder.Services.AddSingleton(_ => FirebaseApp.Create(new AppOptions
-{
-    Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
-    ProjectId = "firebase-with-dotnet",
-})
+builder.Services.AddSingleton(_ => FirebaseApp.Create(
+    new AppOptions()
+    {
+        Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
+        ProjectId = "firebase-with-dotnet",
+    })
 );
 builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
@@ -89,7 +92,7 @@ app.UseCors(x => x
        .AllowAnyMethod()
        .AllowAnyHeader());
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+//app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

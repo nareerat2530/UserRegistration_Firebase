@@ -1,5 +1,8 @@
 ﻿using Google.Cloud.Firestore;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
+using UserRegistration_Tutorial.DTO;
+using UserRegistration_Tutorial.Mapper;
 using UserRegistration_Tutorial.Models.Events;
 
 namespace UserRegistration_Tutorial.Controllers
@@ -9,27 +12,25 @@ namespace UserRegistration_Tutorial.Controllers
     public class EventsController : ControllerBase
     {
         private readonly FirestoreDb _db;
-        public EventsController(FirestoreDb db)
+        private readonly EventsMapper _eventsMapper;
+
+        public EventsController(EventsMapper eventsMapper, FirestoreDb db)
         {
             _db = db;
+        
+            _eventsMapper = eventsMapper;
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddEvent([FromBody] EventsViewModel model)
+        public async Task<IActionResult> AddEvent([FromBody] EventPostDto model)
         {
 
 
             DocumentReference docRef = _db.Collection("calEvent").Document();
-            Events events = new Events
-            {
+            var addNewEvent = _eventsMapper.Map(model);
+            await docRef.SetAsync(addNewEvent);
 
-                Description = model.Description,
-                startDate = model.startDate.ToUniversalTime(),
-                
-            };
-            await docRef.SetAsync(events);
-
-            return Ok(events);
+            return StatusCode(200);
 
         }
         [HttpGet]
@@ -38,8 +39,11 @@ namespace UserRegistration_Tutorial.Controllers
 
             CollectionReference collection = _db.Collection("calEvent");
             QuerySnapshot snapshot = await collection.GetSnapshotAsync();
-            var getEvents = snapshot.Documents.Select(x => x.ConvertTo<Events>()).ToList();
-            return Ok(getEvents);
+
+            //var eventReadDtos = _eventsMapper.Map(snapshot);
+            var eventsList = snapshot.Documents.Select(x => x.ConvertTo<Events>()).ToList();
+            var EventReadDTOList = _eventsMapper.Map(eventsList);
+            return Ok(EventReadDTOList);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteEvent(string id)
@@ -56,10 +60,11 @@ namespace UserRegistration_Tutorial.Controllers
 
             Events updateEvents = new Events
             {
+                Id=id,
 
                 Description = model.Description,
-                startDate = model.startDate.ToUniversalTime()
-              
+                StartDate = model.StartDate.ToUniversalTime(),
+                
             };
 
             await docRef.SetAsync(updateEvents);
