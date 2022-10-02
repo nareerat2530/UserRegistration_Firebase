@@ -37,7 +37,7 @@ builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
     {
         ProjectId = "firebase-with-dotnet",
-        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
+        Credential = GoogleCredential.FromFile(@"C:\Users\twish\source\firebase-with-dotnet-firebase-adminsdk-ncdij-ede0e5d681.json"),
         // <-- service account json file
     }.Build()
 );
