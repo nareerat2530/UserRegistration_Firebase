@@ -5,6 +5,8 @@ using UserRegistration_Tutorial.DTO;
 using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
 using UserRegistration_Tutorial.Models.Events;
+using static Google.Rpc.Context.AttributeContext.Types;
+using System.ComponentModel;
 
 namespace UserRegistration_Tutorial.Mapper
 {
@@ -43,6 +45,7 @@ namespace UserRegistration_Tutorial.Mapper
             }).ToList();
         }
 
+        //add controller
         public Events Map(EventPostDto eventPostDto)
         {
             return new()
@@ -52,16 +55,34 @@ namespace UserRegistration_Tutorial.Mapper
             };
         }
 
-        //public Object Map(EventUpdateDTO eventUpdate, DocumentReference docRef)
+        //public Events Map(EventUpdateDTO eventUpdate)
         //{
-        //    eventUpdate.Description = docRef.Description;
-        //    eventUpdate.EventDate = eventUpdate.EventDate.ToUniversalTime();
-        //    return docRef;
+        //    return new Events()
+        //    {
+        //        Description = eventUpdate.Description,
+        //        EventDate = eventUpdate.EventDate.ToUniversalTime()
+        //    };
+     
+
         //}
 
-        internal object Map(EventUpdateDTO model, DocumentReference docRef)
+        internal Dictionary<string, object> Map(EventUpdateDTO model)
         {
-           model.Description = docRef.Collection('Description')
+            var dictionary = new Dictionary<string, object>();
+            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(model))
+                AddPropertyToDictionary<object>(property, model, dictionary);
+            return dictionary;
+        }
+        private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source, Dictionary<string, T> dictionary)
+        {
+            object value = property.GetValue(source);
+            if (IsOfType<T>(value))
+                dictionary.Add(property.Name, (T)value);
+        }
+
+        private static bool IsOfType<T>(object value)
+        {
+            return value is T;
         }
     }
 }

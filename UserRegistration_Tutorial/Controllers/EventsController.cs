@@ -56,12 +56,17 @@ namespace UserRegistration_Tutorial.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(string id, [FromBody] EventUpdateDTO model)
         {
-            var docRef = _db.Collection("calEvent").Document(id);
-            var updateEvent = _eventsMapper.Map(model, docRef);
+            var dbRef =  _db.Collection("calEvent").Document(id);
+            var docRef = await dbRef.GetSnapshotAsync();
+            if (docRef.Exists)
+            {
+                var updateEvent = _eventsMapper.Map(model);
 
+                await dbRef.UpdateAsync(updateEvent);
+                return StatusCode(204);
+            }
             
-            await docRef.SetAsync(updateEvent);
-            return Ok();
+            return StatusCode(404,"Id does not exist");
 
         }
     }
