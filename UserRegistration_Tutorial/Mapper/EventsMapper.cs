@@ -1,5 +1,6 @@
 ﻿using Google.Cloud.Firestore;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UserRegistration_Tutorial.DTO;
 using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
@@ -15,7 +16,7 @@ namespace UserRegistration_Tutorial.Mapper
            var listOfFieldDictionaries =  documents.Select(d => d.ToDictionary()).ToList();
 
            var readDtoList =  listOfFieldDictionaries.Select(fieldDictionary => new EventReadDto {
-               EventDate = DateTime.ParseExact(fieldDictionary["startDate"].ToString().Replace("Timestamp:", "").Substring(1,10),
+               EventDate = DateTime.ParseExact(fieldDictionary["eventDate"].ToString().Replace("Timestamp:", "").Substring(0,10),
                "yyyy-MM-dd", null),
                 Description = (string)fieldDictionary["Description"]
               
@@ -36,7 +37,7 @@ namespace UserRegistration_Tutorial.Mapper
             {
                 Id = e.Id,
                 Description = e.Description,
-                EventDate = e.StartDate.ToUniversalTime()
+                EventDate = e.EventDate.ToUniversalTime()
 
 
             }).ToList();
@@ -47,8 +48,20 @@ namespace UserRegistration_Tutorial.Mapper
             return new()
             {
                 Description = eventPostDto.Description,
-                StartDate = eventPostDto.EventDate.ToUniversalTime()
+                EventDate = eventPostDto.EventDate.ToUniversalTime()
             };
+        }
+
+        //public Object Map(EventUpdateDTO eventUpdate, DocumentReference docRef)
+        //{
+        //    eventUpdate.Description = docRef.Description;
+        //    eventUpdate.EventDate = eventUpdate.EventDate.ToUniversalTime();
+        //    return docRef;
+        //}
+
+        internal object Map(EventUpdateDTO model, DocumentReference docRef)
+        {
+           model.Description = docRef.Collection('Description')
         }
     }
 }

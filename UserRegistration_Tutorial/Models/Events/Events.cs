@@ -13,7 +13,7 @@ namespace UserRegistration_Tutorial.Models.Events
         public string Description { get; set; } = string.Empty;
 
         [FirestoreProperty]
-        public DateTime StartDate { get; set; }
+        public DateTime EventDate { get; set; }
 
         
        

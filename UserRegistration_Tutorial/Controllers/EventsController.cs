@@ -26,7 +26,7 @@ namespace UserRegistration_Tutorial.Controllers
         {
 
 
-            DocumentReference docRef = _db.Collection("calEvent").Document();
+            var docRef = _db.Collection("calEvent").Document();
             var addNewEvent = _eventsMapper.Map(model);
             await docRef.SetAsync(addNewEvent);
 
@@ -37,37 +37,30 @@ namespace UserRegistration_Tutorial.Controllers
         public async Task<IActionResult> GetAll()
         {
 
-            CollectionReference collection = _db.Collection("calEvent");
-            QuerySnapshot snapshot = await collection.GetSnapshotAsync();
+            var collection = _db.Collection("calEvent");
+            var snapshot = await collection.GetSnapshotAsync();
 
-            //var eventReadDtos = _eventsMapper.Map(snapshot);
+           
             var eventsList = snapshot.Documents.Select(x => x.ConvertTo<Events>()).ToList();
-            var EventReadDTOList = _eventsMapper.Map(eventsList);
-            return Ok(EventReadDTOList);
+            var eventReadDtoList = _eventsMapper.Map(eventsList);
+            return Ok(eventReadDtoList);
         }
         [HttpDelete]
         public async Task<IActionResult> DeleteEvent(string id)
         {
-            DocumentReference eventRef = _db.Collection("calEvent").Document(id);
+            var eventRef = _db.Collection("calEvent").Document(id);
             await eventRef.DeleteAsync();
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync(string id, [FromBody] EventsViewModel model)
+        public async Task<IActionResult> UpdateAsync(string id, [FromBody] EventUpdateDTO model)
         {
-            DocumentReference docRef = _db.Collection("calEvent").Document(id);
+            var docRef = _db.Collection("calEvent").Document(id);
+            var updateEvent = _eventsMapper.Map(model, docRef);
 
-            Events updateEvents = new Events
-            {
-                Id=id,
-
-                Description = model.Description,
-                StartDate = model.StartDate.ToUniversalTime(),
-                
-            };
-
-            await docRef.SetAsync(updateEvents);
+            
+            await docRef.SetAsync(updateEvent);
             return Ok();
 
         }
