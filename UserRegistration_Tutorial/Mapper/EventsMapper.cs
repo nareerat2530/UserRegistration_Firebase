@@ -1,11 +1,6 @@
 ﻿using Google.Cloud.Firestore;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using UserRegistration_Tutorial.DTO;
-using Google.Cloud.Firestore;
-using Google.Cloud.Firestore.V1;
 using UserRegistration_Tutorial.Models.Events;
-using static Google.Rpc.Context.AttributeContext.Types;
 using System.ComponentModel;
 
 namespace UserRegistration_Tutorial.Mapper
@@ -41,8 +36,7 @@ namespace UserRegistration_Tutorial.Mapper
                 Description = e.Description,
                 EventDate = e.EventDate.ToUniversalTime()
 
-
-            }).ToList();
+           }).ToList();
         }
 
         //add controller
@@ -54,19 +48,7 @@ namespace UserRegistration_Tutorial.Mapper
                 EventDate = eventPostDto.EventDate.ToUniversalTime()
             };
         }
-
-        //public Events Map(EventUpdateDTO eventUpdate)
-        //{
-        //    return new Events()
-        //    {
-        //        Description = eventUpdate.Description,
-        //        EventDate = eventUpdate.EventDate.ToUniversalTime()
-        //    };
-     
-
-        //}
-
-        internal Dictionary<string, object> Map(EventUpdateDTO model)
+        public Dictionary<string, object> Map(EventUpdateDTO model)
         {
             var dictionary = new Dictionary<string, object>();
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(model))

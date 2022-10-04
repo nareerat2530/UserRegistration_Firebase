@@ -6,7 +6,6 @@ namespace UserRegistration_Tutorial.Models.Events
     public class Events
     {
 
-
         [FirestoreDocumentId]
         public string Id { get; set; }
         [FirestoreProperty]
@@ -14,9 +13,6 @@ namespace UserRegistration_Tutorial.Models.Events
 
         [FirestoreProperty]
         public DateTime EventDate { get; set; }
-
-        
-       
 
     }
 }
