@@ -13,7 +13,7 @@ namespace UserRegistration_Tutorial.Mapper
            var listOfFieldDictionaries =  documents.Select(d => d.ToDictionary()).ToList();
 
            var readDtoList =  listOfFieldDictionaries.Select(fieldDictionary => new EventReadDto {
-               EventDate = DateTime.ParseExact(fieldDictionary["eventDate"].ToString().Replace("Timestamp:", "").Substring(0,10),
+               EventDate = DateTime.ParseExact(fieldDictionary["eventDate"].ToString().Replace("Timestamp:", "").Substring(1,10),
                "yyyy-MM-dd", null),
                 Description = (string)fieldDictionary["Description"]
               
@@ -48,7 +48,7 @@ namespace UserRegistration_Tutorial.Mapper
                 EventDate = eventPostDto.EventDate.ToUniversalTime()
             };
         }
-        public Dictionary<string, object> Map(EventUpdateDTO model)
+        public Dictionary<string, object> Map(EventUpdateDto model)
         {
             var dictionary = new Dictionary<string, object>();
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(model))

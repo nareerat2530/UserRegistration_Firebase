@@ -73,7 +73,7 @@ namespace UserRegistration_Tutorial.Controllers
         [HttpGet("{menuId}/email")]
         public async Task<IActionResult> GetUserByEmail(string email)
         {
-            UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+             UserRecord userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
 
             return Ok(userRecord);
 

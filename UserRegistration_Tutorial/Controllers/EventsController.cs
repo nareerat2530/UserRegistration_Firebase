@@ -50,11 +50,11 @@ namespace UserRegistration_Tutorial.Controllers
         {
             var eventRef = _db.Collection("calEvent").Document(id);
             await eventRef.DeleteAsync();
-            return Ok();
+            return StatusCode(200);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync(string id, [FromBody] EventUpdateDTO model)
+        public async Task<IActionResult> UpdateAsync(string id, [FromBody] EventUpdateDto model)
         {
             var dbRef =  _db.Collection("calEvent").Document(id);
             var docRef = await dbRef.GetSnapshotAsync();
@@ -66,7 +66,7 @@ namespace UserRegistration_Tutorial.Controllers
                 return StatusCode(204);
             }
             
-            return StatusCode(404,"Id does not exist");
+            return NotFound("Id does not exist");
 
         }
     }
