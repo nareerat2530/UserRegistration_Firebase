@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
 using FirebaseAdmin;
-using FirebaseAdmin.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -48,8 +47,8 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
     {
         return new List<Claim>
         {
-            new("id", claims["user_id"].ToString()),
-            new("email", claims["user_id"].ToString()),
+            new("uid", claims["user_id"].ToString()),
+            new("email", claims["email"].ToString()),
             new("name", claims["name"].ToString())
         };
     }

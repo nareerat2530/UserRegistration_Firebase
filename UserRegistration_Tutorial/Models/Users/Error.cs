@@ -1,4 +1,4 @@
-﻿namespace UserRegistration_Tutorial.Services;
+﻿namespace UserRegistration_Tutorial.Models.Users;
 
 public class Error
 {

@@ -1,6 +1,4 @@
-﻿using Google.Cloud.Firestore;
-
-namespace UserRegistration_Tutorial.Models.Events;
+﻿namespace UserRegistration_Tutorial.Models.Events;
 
 [FirestoreData]
 public class Events

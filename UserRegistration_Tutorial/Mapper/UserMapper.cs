@@ -1,24 +1,13 @@
-﻿using System.ComponentModel;
-using FirebaseAdmin.Auth;
-using UserRegistration_Tutorial.DTO.UserDto;
-
-namespace UserRegistration_Tutorial.Mapper;
+﻿namespace UserRegistration_Tutorial.Mapper;
 
 public class UserMapper
 {
-    public UserRecordArgs Map(UserUpdateDto model)
+    public UserRecordArgs Map(UserUpdateInfoDto model, UserRecord userFromDataBase)
     {
-        var userRecordArgs = new UserRecordArgs()
+        return new UserRecordArgs
         {
-            
-            DisplayName = model.UserName,
-            Password = model.Password
-
+            Uid = userFromDataBase.Uid,
+            DisplayName = model.UserName
         };
-       return userRecordArgs;
-        
-       
     }
-    
-
 }

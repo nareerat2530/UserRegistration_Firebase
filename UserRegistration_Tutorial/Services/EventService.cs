@@ -1,5 +1,4 @@
-﻿using Google.Cloud.Firestore;
-using UserRegistration_Tutorial.Interfaces;
+﻿using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Models.Events;
 
 namespace UserRegistration_Tutorial.Services;

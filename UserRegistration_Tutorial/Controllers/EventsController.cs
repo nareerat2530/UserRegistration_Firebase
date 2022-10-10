@@ -1,6 +1,4 @@
-﻿using Google.Cloud.Firestore;
-using Microsoft.AspNetCore.Mvc;
-using UserRegistration_Tutorial.DTO.Events;
+﻿using UserRegistration_Tutorial.DTO.Events;
 using UserRegistration_Tutorial.Mapper;
 using UserRegistration_Tutorial.Models.Events;
 
