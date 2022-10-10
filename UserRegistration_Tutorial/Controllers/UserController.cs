@@ -1,10 +1,6 @@
-﻿using FirebaseAdmin.Auth;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using UserRegistration_Tutorial.DTO.UserDto;
+﻿using Microsoft.AspNetCore.Authorization;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Mapper;
-using UserRegistration_Tutorial.Models;
 
 namespace UserRegistration_Tutorial.Controllers;
 
@@ -12,8 +8,8 @@ namespace UserRegistration_Tutorial.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly IUserService _userService;
     private readonly UserMapper _userMapper;
+    private readonly IUserService _userService;
 
     public UserController(IUserService userService, ILogger<UserController> logger, UserMapper userMapper)
     {
@@ -24,27 +20,26 @@ public class UserController : ControllerBase
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
-    public Task<IActionResult> GetAllUsersAsync()
+    public IActionResult GetAllUsersAsync()
     {
         var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
-        return Task.FromResult<IActionResult>(Ok(pagedEnumerable));
+        return Ok(pagedEnumerable);
     }
 
 
-    [HttpPut("Update/{id}")]
-    public async Task<IActionResult> UpdateAsync(string id, [FromBody] UserUpdateDto model)
+    [HttpPut("Update")]
+    [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+    public async Task<IActionResult> UpdateAsync([FromBody] UserUpdateInfoDto model)
     {
-       // var banan =  await FirebaseAuth.DefaultInstance.GetUserAsync(id);
-       
-        // var updatedUser = new UserRecordArgs
-        // {
-        //     Password = model.Password,
-        //     DisplayName = model.UserName
-        // };
-        
-        var updatedUser = _userMapper.Map(model);
-     var  banan = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
-        return Ok(new { message = "User updated successfully" });
+        var email = User.Claims.Where(c => c.Type == "email")
+            .Select(c => c.Value).SingleOrDefault();
+
+        var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+
+
+        var updatedUser = _userMapper.Map(model, userFromDataBase);
+        userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+        return StatusCode(200,"User updated successfully");
     }
 
 
@@ -65,7 +60,7 @@ public class UserController : ControllerBase
     }
 
 
-    [HttpGet("{menuId}/email")]
+    [HttpGet("{email?}")]
     public async Task<IActionResult> GetUserByEmail(string email)
     {
         var userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);

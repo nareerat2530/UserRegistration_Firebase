@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
-using FirebaseAdmin.Auth;
-using UserRegistration_Tutorial.Services;
+using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Helpers;
 
@@ -49,7 +48,7 @@ public class ExceptionHandlingMiddleware
                 break;
             case FirebaseAuthException e:
                 response.StatusCode = (int)HttpStatusCode.NotFound;
-                errorService.Message = "Something went wrong!";
+                errorService.Message = e.Message;
                 break;
             case KeyNotFoundException e:
                 response.StatusCode = (int)HttpStatusCode.NotFound;

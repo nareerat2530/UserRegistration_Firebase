@@ -1,6 +1,5 @@
-﻿using FirebaseAdmin.Auth;
-using UserRegistration_Tutorial.Interfaces;
-using UserRegistration_Tutorial.Models;
+﻿using UserRegistration_Tutorial.Interfaces;
+using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Services;
 
@@ -42,17 +41,17 @@ public class UserService : IUserService
             Password = model.Password,
             DisplayName = model.UserName
         };
-        var userRecord = await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
+        await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
     }
 
     public async Task UpdateAsync(string uid, UpdateRequest model)
     {
-        var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+        await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
         var updatedUser = new UserRecordArgs
         {
             Password = model.Password,
             DisplayName = model.UserName
         };
-        var userRecord = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+        await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
     }
 }

@@ -1,12 +1,11 @@
-﻿using FirebaseAdmin.Auth;
-using UserRegistration_Tutorial.Models;
+﻿using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Interfaces;
 
 public interface IUserService
 {
     Task GetAllUsersAsync();
-    //LoginResponse Authenticate(LoginRequest model);
+
 
     Task<UserRecord> GetById(string uid);
     Task RegisterAsync(RegisterRequest model);

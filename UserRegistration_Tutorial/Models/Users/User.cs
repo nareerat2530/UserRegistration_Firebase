@@ -1,10 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace UserRegistration_Tutorial.Entities;
+namespace UserRegistration_Tutorial.Models.Users;
 
 public class User
 {
-    public string uid { get; set; } = string.Empty;
+    public string Uid { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string UserName { get; set; } = string.Empty;
 

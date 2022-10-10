@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UserRegistration_Tutorial.Entities;
+using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Helpers;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    private AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 

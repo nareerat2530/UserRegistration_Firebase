@@ -1,6 +1,5 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -19,34 +18,34 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// builder.Services.AddDbContext<AppDbContext>(options =>
+//     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EventsMapper>();
 builder.Services.AddScoped<UserMapper>();
 
 
-builder.Services.AddSingleton(_ => FirebaseApp.Create(
+builder.Services.AddSingleton(FirebaseApp.Create(
     new AppOptions
     {
         Credential =
-            GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
-        ProjectId = "firebase-with-dotnet"
+            GoogleCredential.FromFile(
+                @"C:\Users\roman\source\firebase-with-dotnet-firebase-adminsdk-ncdij-8b21283d68.json")
+        // ProjectId = "firebase-with-dotnet"
     })
 );
-builder.Services.AddSingleton(_ =>
-    new FirestoreDbBuilder
-    {
-        ProjectId = "firebase-with-dotnet",
-        Credential =
-            GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json")
-        // <-- service account json file
-    }.Build()
-);
+builder.Services.AddSingleton(_ => new FirestoreDbBuilder
+{
+    ProjectId = "firebase-with-dotnet",
+    Credential =
+        GoogleCredential.FromFile(
+            @"C:\Users\roman\source\firebase-with-dotnet-firebase-adminsdk-ncdij-8b21283d68.json")
+    // <-- service account json file
+}.Build());
 
 builder.Services.AddAuthentication("FirebaseAuthentication")
-    .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>("FirebaseAuthentication", o => { });
+    .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>("FirebaseAuthentication", _ => { });
 
 builder.Services.AddSwaggerGen(option =>
 {
@@ -72,7 +71,7 @@ builder.Services.AddSwaggerGen(option =>
                     Id = "Bearer"
                 }
             },
-            new string[] { }
+            Array.Empty<string>()
         }
     });
 });
