@@ -13,43 +13,43 @@ using UserRegistration_Tutorial.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
-
 // Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EventsMapper>();
+builder.Services.AddScoped<UserMapper>();
 
 
 builder.Services.AddSingleton(_ => FirebaseApp.Create(
-    new AppOptions()
+    new AppOptions
     {
-        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
-        ProjectId = "firebase-with-dotnet",
+        Credential =
+            GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
+        ProjectId = "firebase-with-dotnet"
     })
 );
 builder.Services.AddSingleton(_ =>
     new FirestoreDbBuilder
     {
         ProjectId = "firebase-with-dotnet",
-        Credential = GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json"),
+        Credential =
+            GoogleCredential.FromFile(@"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json")
         // <-- service account json file
     }.Build()
 );
 
 builder.Services.AddAuthentication("FirebaseAuthentication")
-    .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>("FirebaseAuthentication", (o) => { });
+    .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>("FirebaseAuthentication", o => { });
 
 builder.Services.AddSwaggerGen(option =>
 {
-
-
-
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -68,11 +68,11 @@ builder.Services.AddSwaggerGen(option =>
             {
                 Reference = new OpenApiReference
                 {
-                    Type=ReferenceType.SecurityScheme,
-                    Id="Bearer"
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
                 }
             },
-            new string[]{}
+            new string[] { }
         }
     });
 });
@@ -87,10 +87,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors(x => x
-       .AllowAnyOrigin()
-       .AllowAnyMethod()
-       .AllowAnyHeader());
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 //app.UseMiddleware<ExceptionHandlingMiddleware>();
 
@@ -98,7 +99,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-//app.UseMiddleware<JwtMiddleware>();
+
 
 app.MapControllers();
 

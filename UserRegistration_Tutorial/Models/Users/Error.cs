@@ -1,9 +1,7 @@
-﻿namespace UserRegistration_Tutorial.Services
-{
-    public class Error
-    {
-        public string? Message { get; set; }
-        public bool Success { get; set; }
+﻿namespace UserRegistration_Tutorial.Services;
 
-    }
+public class Error
+{
+    public string? Message { get; set; }
+    public bool Success { get; set; }
 }

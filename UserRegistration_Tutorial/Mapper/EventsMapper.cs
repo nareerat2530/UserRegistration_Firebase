@@ -1,70 +1,49 @@
-﻿using Google.Cloud.Firestore;
-using UserRegistration_Tutorial.DTO;
+﻿using System.ComponentModel;
+using UserRegistration_Tutorial.DTO.Events;
 using UserRegistration_Tutorial.Models.Events;
-using System.ComponentModel;
 
-namespace UserRegistration_Tutorial.Mapper
+namespace UserRegistration_Tutorial.Mapper;
+
+public class EventsMapper
 {
-    public class EventsMapper
+    public static IEnumerable<EventReadDto> Map(IEnumerable<Events> eventsList)
     {
-       
-        public IEnumerable<EventReadDto> Map(IReadOnlyList<DocumentSnapshot> documents )
+        return eventsList.Select(e => new EventReadDto
         {
-           var listOfFieldDictionaries =  documents.Select(d => d.ToDictionary()).ToList();
+            Id = e.Id,
+            Description = e.Description,
+            EventDate = e.EventDate.ToUniversalTime()
+        }).ToList();
+    }
 
-           var readDtoList =  listOfFieldDictionaries.Select(fieldDictionary => new EventReadDto {
-               EventDate = DateTime.ParseExact(fieldDictionary["eventDate"].ToString().Replace("Timestamp:", "").Substring(1,10),
-               "yyyy-MM-dd", null),
-                Description = (string)fieldDictionary["Description"]
-              
-           }).ToList();
 
-           for (var i = 0; i < readDtoList.Count; i++)
-           {
-               readDtoList[i].Id = documents[i].Id;
-           }
-
-           return readDtoList;
-
-        }
-
-        public IEnumerable<EventReadDto> Map(List<Events> eventsList)
+    public Events Map(EventPostDto eventPostDto)
+    {
+        return new Events
         {
-            return eventsList.Select(e => new EventReadDto
-            {
-                Id = e.Id,
-                Description = e.Description,
-                EventDate = e.EventDate.ToUniversalTime()
+            Description = eventPostDto.Description,
+            EventDate = eventPostDto.EventDate.ToUniversalTime()
+        };
+    }
 
-           }).ToList();
-        }
+    public Dictionary<string, object> Map(EventUpdateDto model)
+    {
+        var dictionary = new Dictionary<string, object>();
+        foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(model))
+            AddPropertyToDictionary(property, model, dictionary);
+        return dictionary;
+    }
 
-        //add controller
-        public Events Map(EventPostDto eventPostDto)
-        {
-            return new()
-            {
-                Description = eventPostDto.Description,
-                EventDate = eventPostDto.EventDate.ToUniversalTime()
-            };
-        }
-        public Dictionary<string, object> Map(EventUpdateDto model)
-        {
-            var dictionary = new Dictionary<string, object>();
-            foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(model))
-                AddPropertyToDictionary<object>(property, model, dictionary);
-            return dictionary;
-        }
-        private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source, Dictionary<string, T> dictionary)
-        {
-            object value = property.GetValue(source);
-            if (IsOfType<T>(value))
-                dictionary.Add(property.Name, (T)value);
-        }
+    private static void AddPropertyToDictionary<T>(PropertyDescriptor property, object source,
+        Dictionary<string, T> dictionary)
+    {
+        var value = property.GetValue(source);
+        if (IsOfType<T>(value))
+            dictionary.Add(property.Name, (T)value);
+    }
 
-        private static bool IsOfType<T>(object value)
-        {
-            return value is T;
-        }
+    private static bool IsOfType<T>(object value)
+    {
+        return value is T;
     }
 }

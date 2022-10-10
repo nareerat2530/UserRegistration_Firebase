@@ -1,15 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UserRegistration_Tutorial.Models
+namespace UserRegistration_Tutorial.Models;
+
+public class LoginRequest
 {
-    public class LoginRequest
-    {
-        [Required]
-        public string email { get; set; } = string.Empty;
+    public bool returnSecureToken = true;
 
-        [Required]
-        public string password { get; set; } = null!;
+    [Required] public string email { get; set; } = string.Empty;
 
-        public bool returnSecureToken = true;
-    }
+    [Required] public string password { get; set; } = null!;
 }

@@ -1,7 +1,6 @@
-﻿namespace UserRegistration_Tutorial.Helpers
+﻿namespace UserRegistration_Tutorial.Helpers;
+
+public class AppSetting
 {
-    public class AppSetting
-    {
-        public string Secret { get; set; } = null!;
-    }
+    public string Secret { get; set; } = null!;
 }
