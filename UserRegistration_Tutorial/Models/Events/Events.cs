@@ -3,7 +3,7 @@
 [FirestoreData]
 public class Events
 {
-    [FirestoreDocumentId] public string Id { get; set; }
+    [FirestoreDocumentId] public string Id { get; set; }= string.Empty;
 
     [FirestoreProperty] public string Description { get; set; } = string.Empty;
 

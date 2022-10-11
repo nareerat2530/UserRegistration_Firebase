@@ -18,9 +18,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// builder.Services.AddDbContext<AppDbContext>(options =>
-//     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsetting"));
+
+builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsettings"));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EventsMapper>();
 builder.Services.AddScoped<UserMapper>();
@@ -31,7 +30,7 @@ builder.Services.AddSingleton(FirebaseApp.Create(
     {
         Credential =
             GoogleCredential.FromFile(
-                @"C:\Users\roman\source\firebase-with-dotnet-firebase-adminsdk-ncdij-8b21283d68.json")
+                @"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json")
         // ProjectId = "firebase-with-dotnet"
     })
 );
@@ -40,7 +39,7 @@ builder.Services.AddSingleton(_ => new FirestoreDbBuilder
     ProjectId = "firebase-with-dotnet",
     Credential =
         GoogleCredential.FromFile(
-            @"C:\Users\roman\source\firebase-with-dotnet-firebase-adminsdk-ncdij-8b21283d68.json")
+            @"C:\Project\firebase-with-dotnet-firebase-adminsdk-ncdij-b0a7d2a92f.json")
     // <-- service account json file
 }.Build());
 
@@ -92,7 +91,7 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-//app.UseMiddleware<ExceptionHandlingMiddleware>();
+// app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

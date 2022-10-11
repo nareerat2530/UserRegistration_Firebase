@@ -19,7 +19,7 @@ public class UserController : ControllerBase
 
 
     [HttpGet]
-    [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+    // [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public IActionResult GetAllUsersAsync()
     {
         var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
@@ -29,42 +29,41 @@ public class UserController : ControllerBase
 
     [HttpPut("Update")]
     [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
-    public async Task<IActionResult> UpdateAsync([FromBody] UserUpdateInfoDto model)
+    public async Task<IActionResult> UpdateUserAsync([FromBody] UserUpdateInfoDto model)
     {
-        var email = User.Claims.Where(c => c.Type == "email")
-            .Select(c => c.Value).SingleOrDefault();
-
-        var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-
-
-        var updatedUser = _userMapper.Map(model, userFromDataBase);
-        userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
-        return StatusCode(200,"User updated successfully");
+        // var email = User.Claims.Where(c => c.Type == "email")
+        //     .Select(c => c.Value).SingleOrDefault();
+        //
+        // var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+        //
+        //
+        // var updatedUser = _userMapper.Map(model, userFromDataBase);
+        // userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+        // return StatusCode(200,"User updated successfully");
     }
 
 
     [HttpDelete("{id}")]
-    [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+    // [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public async Task<IActionResult> DeleteAsync(string id)
     {
-        await FirebaseAuth.DefaultInstance.DeleteUserAsync(id);
-        return StatusCode(200, "successfully delete");
+        await _userService.DeleteUserAsync(id);
+        return StatusCode(200, "User removed successfully");
     }
 
     [HttpGet("{uid?}")]
     public async Task<IActionResult> GetUserById(string uid)
     {
-        var userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-
-        return Ok(userRecord);
+      var getUserById = await _userService.GetUserById(uid);
+      return Ok(getUserById);
     }
 
 
-    [HttpGet("{email?}")]
-    public async Task<IActionResult> GetUserByEmail(string email)
-    {
-        var userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-
-        return Ok(userRecord);
-    }
+    // [HttpGet("{email}")]
+    // public async Task<IActionResult> GetUserByEmail(string email)
+    // {
+    //     var userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+    //
+    //     return Ok(userRecord);
+    // }
 }
