@@ -4,7 +4,7 @@ public class EventReadDto
 {
     public string Id { get; init; }= string.Empty;
 
-    public string Description { get; init; } = string.Empty;
+    public string? Description { get; init; } = string.Empty;
 
 
     public DateTime EventDate { get; set; }

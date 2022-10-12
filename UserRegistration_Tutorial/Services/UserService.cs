@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Firebase.Auth;
+using Google.Apis.Util;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Mapper;
 
@@ -43,8 +44,18 @@ public class UserService : IUserService
 
     public async Task<UserRecord> GetUserById(string uid)
     {
-        var userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-        return userRecord;
+       
+        try
+        {
+            var userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
+            return userRecord;
+        }
+        catch
+        {
+            return null;
+        }
+        
+        
     }
 
     public async Task RegisterUserAsync(RegisterDto model)

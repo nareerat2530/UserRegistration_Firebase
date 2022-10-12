@@ -6,8 +6,8 @@ namespace UserRegistration_Tutorial.Interfaces;
 public interface IEventService
 {
     Task<IEnumerable<EventReadDto>> GetAllEventsAsync();
-    Task AddNewEvent();
+    Task AddNewEvent(EventPostDto eventPostDto);
     Task DeleteEventsAsync(string id);
-    Task UpdateEventsAsync(Events events);
-    Task <DocumentReference> GetEventsByIdAsync(int id);
+    Task<bool> UpdateEventAsync(string id, EventUpdateDto model);
+    Task<EventReadDto> GetEventsByIdAsync(string id);
 }
