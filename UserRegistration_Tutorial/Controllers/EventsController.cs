@@ -1,4 +1,5 @@
 ﻿using UserRegistration_Tutorial.DTO.Events;
+using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Mapper;
 using UserRegistration_Tutorial.Models.Events;
 
@@ -10,10 +11,13 @@ public class EventsController : ControllerBase
 {
     private readonly FirestoreDb _db;
     private readonly EventsMapper _eventsMapper;
+    private readonly IEventService _eventService;
 
-    public EventsController(EventsMapper eventsMapper, FirestoreDb db)
+    public EventsController(EventsMapper eventsMapper, FirestoreDb db, IUserService userService, IEventService eventService)
     {
         _db = db;
+        _eventService = eventService;
+      
 
         _eventsMapper = eventsMapper;
     }
@@ -31,13 +35,9 @@ public class EventsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var collection = _db.Collection("calEvent");
-        var snapshot = await collection.GetSnapshotAsync();
-
-
-        var eventsList = snapshot.Documents.Select(x => x.ConvertTo<Events>()).ToList();
-        var eventReadDtoList = EventsMapper.Map(eventsList);
-        return Ok(eventReadDtoList);
+       
+        var getAllEvents = await _eventService.GetAllEventsAsync();
+        return Ok(getAllEvents);
     }
 
     [HttpDelete]

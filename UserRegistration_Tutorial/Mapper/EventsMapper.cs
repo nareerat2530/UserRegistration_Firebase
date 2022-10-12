@@ -6,7 +6,7 @@ namespace UserRegistration_Tutorial.Mapper;
 
 public class EventsMapper
 {
-    public static IEnumerable<EventReadDto> Map(IEnumerable<Events> eventsList)
+    public IEnumerable<EventReadDto> Map(IEnumerable<Events> eventsList)
     {
         return eventsList.Select(e => new EventReadDto
         {

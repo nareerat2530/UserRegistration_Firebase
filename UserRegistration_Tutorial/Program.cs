@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsettings"));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<EventsMapper>();
 builder.Services.AddScoped<UserMapper>();
 
