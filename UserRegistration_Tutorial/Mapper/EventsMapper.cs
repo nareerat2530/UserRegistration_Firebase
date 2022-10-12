@@ -15,6 +15,15 @@ public class EventsMapper
             EventDate = e.EventDate.ToUniversalTime()
         }).ToList();
     }
+    public EventReadDto Map(Events e)
+    {
+        return new EventReadDto
+        {
+            Id = e.Id,
+            Description = e.Description,
+            EventDate = e.EventDate.ToUniversalTime()
+        };
+    }
 
 
     public Events Map(EventPostDto eventPostDto)
@@ -24,6 +33,18 @@ public class EventsMapper
             Description = eventPostDto.Description,
             EventDate = eventPostDto.EventDate.ToUniversalTime()
         };
+    }
+    public EventReadDto Map(Dictionary<string, object> snapshotDictionary)
+    {
+        
+        return new EventReadDto()
+        {
+            
+            Description = snapshotDictionary.FirstOrDefault(e => e.Key == "Description").Value.ToString(),
+            EventDate = DateTime.ParseExact(snapshotDictionary.FirstOrDefault(e => e.Key == "EventDate").Value.ToString().Replace("Timestamp:", "").Substring(1,10), 
+                "yyyy-MM-dd", null)
+        };
+           
     }
 
     public Dictionary<string, object> Map(EventUpdateDto model)

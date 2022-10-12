@@ -19,7 +19,7 @@ public class UserController : ControllerBase
 
 
     [HttpGet]
-     [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+     // [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public IActionResult GetAllUsersAsync()
     {
         var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
@@ -31,12 +31,12 @@ public class UserController : ControllerBase
     [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UserUpdateInfoDto model)
     {
-        var email = User.Claims.Where(c => c.Type == "email")
-            .Select(c => c.Value).SingleOrDefault();
-        
-        var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-        var updatedUser = _userMapper.Map(model, userFromDataBase);
-        userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+        // var email = User.Claims.Where(c => c.Type == "email")
+        //     .Select(c => c.Value).SingleOrDefault();
+        //
+        // var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+        // var updatedUser = _userMapper.Map(model, userFromDataBase);
+        // userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
         return StatusCode(200,"User updated successfully");
     }
 

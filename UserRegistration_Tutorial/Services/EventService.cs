@@ -28,9 +28,11 @@ public class EventService : IEventService
         return eventReadDtoList;
     }
 
-    public Task AddNewEvent()
+    public async Task AddNewEvent(EventPostDto eventPostDto)
     {
-        throw new NotImplementedException();
+        var docRef = _db.Collection("calEvent").Document();
+        var addNewEvent = _eventsMapper.Map(eventPostDto);
+        await docRef.SetAsync(addNewEvent);
     }
 
     public Task DeleteEventsAsync(string id)
@@ -39,16 +41,31 @@ public class EventService : IEventService
        return eventRef.DeleteAsync();
     }
 
-    public Task UpdateEventsAsync(Events events)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<DocumentReference> GetEventsByIdAsync(string id)
+     public async Task<bool> UpdateEventAsync(string id, EventUpdateDto model)
     {
         var dbRef = _db.Collection("calEvent").Document(id);
-        var snap =  dbRef.GetSnapshotAsync();
-        return snap;
+        var docRef = await dbRef.GetSnapshotAsync();
+
+
+        if (docRef.Exists)
+        {
+            var updateEvent = _eventsMapper.Map(model);
+            await dbRef.UpdateAsync(updateEvent);
+            return true;
+        }
+        return false;
+        
+    }
+
+    
+
+    public async Task<EventReadDto> GetEventsByIdAsync(string id)
+    {
+        var dbRef = _db.Collection("calEvent").Document(id);
+        var snapshot =  await dbRef.GetSnapshotAsync();
+        var eventFromDB = snapshot.ConvertTo<Events>();
+        var eventReadDto = _eventsMapper.Map(eventFromDB);
+        return eventReadDto;
 
 
     }

@@ -56,13 +56,13 @@ public class UserService : IUserService
 
     public async Task UpdateUserAsync(string uid, UserUpdateInfoDto model)
     {
-        // var email = User.Claims.Where(c => c.Type == "email")
-        //     .Select(c => c.Value).SingleOrDefault();
-        //
-        // var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-        //
-        //
-        // var updatedUser = _userMapper.Map(model, userFromDataBase);
-        // userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+        var email = User.Claims.Where(c => c.Type == "email")
+            .Select(c => c.Value).SingleOrDefault();
+        
+        var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
+        
+        
+        var updatedUser = _userMapper.Map(model, userFromDataBase);
+        userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
     }
 }
