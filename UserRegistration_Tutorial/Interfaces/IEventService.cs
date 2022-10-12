@@ -7,7 +7,7 @@ public interface IEventService
 {
     Task<IEnumerable<EventReadDto>> GetAllEventsAsync();
     Task AddNewEvent();
-    Task DeleteEventsAsync(Events events);
+    Task DeleteEventsAsync(string id);
     Task UpdateEventsAsync(Events events);
-    Task<Events> GetEventsByIdAsync(int id);
+    Task <DocumentReference> GetEventsByIdAsync(int id);
 }

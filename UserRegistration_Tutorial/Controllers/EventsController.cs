@@ -43,8 +43,8 @@ public class EventsController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteEvent(string id)
     {
-        var eventRef = _db.Collection("calEvent").Document(id);
-        await eventRef.DeleteAsync();
+        
+        await _eventService.DeleteEventsAsync(id);
         return StatusCode(200);
     }
 

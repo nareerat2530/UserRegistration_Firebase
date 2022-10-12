@@ -33,9 +33,10 @@ public class EventService : IEventService
         throw new NotImplementedException();
     }
 
-    public Task DeleteEventsAsync(Events events)
+    public Task DeleteEventsAsync(string id)
     {
-        throw new NotImplementedException();
+        var eventRef = _db.Collection("calEvent").Document(id);
+       return eventRef.DeleteAsync();
     }
 
     public Task UpdateEventsAsync(Events events)
@@ -43,8 +44,14 @@ public class EventService : IEventService
         throw new NotImplementedException();
     }
 
-    public Task<Events> GetEventsByIdAsync(int id)
+    public Task<DocumentReference> GetEventsByIdAsync(string id)
     {
-        throw new NotImplementedException();
+        var dbRef = _db.Collection("calEvent").Document(id);
+        var snap =  dbRef.GetSnapshotAsync();
+        return snap;
+
+
     }
+
+    
 }
