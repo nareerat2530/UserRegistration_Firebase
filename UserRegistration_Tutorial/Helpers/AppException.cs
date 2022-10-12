@@ -2,17 +2,17 @@
 
 namespace UserRegistration_Tutorial.Helpers;
 
-public class AppException : Exception
+public abstract class AppException : Exception
 {
-    public AppException()
+    protected AppException()
     {
     }
 
-    public AppException(string message) : base(message)
+    protected AppException(string message) : base(message)
     {
     }
 
-    public AppException(string message, params object[] args)
+    protected AppException(string message, params object[] args)
         : base(string.Format(CultureInfo.CurrentCulture, message, args))
     {
     }

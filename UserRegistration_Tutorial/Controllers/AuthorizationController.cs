@@ -1,5 +1,9 @@
 ﻿using Firebase.Auth;
+using Microsoft.AspNetCore.Identity;
+using UserRegistration_Tutorial.Interfaces;
+using UserRegistration_Tutorial.Mapper;
 using UserRegistration_Tutorial.Models.Users;
+using UserRegistration_Tutorial.Services;
 using FirebaseAuth = FirebaseAdmin.Auth.FirebaseAuth;
 
 namespace UserRegistration_Tutorial.Controllers;
@@ -8,18 +12,23 @@ namespace UserRegistration_Tutorial.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequest model)
-    {
-        var user = new UserRecordArgs
-        {
-            Email = model.Email,
-            Password = model.Password,
-            DisplayName = model.UserName
-        };
-        await FirebaseAuth.DefaultInstance.CreateUserAsync(user);
+    private readonly IUserService _userService;
+    private readonly UserMapper _userMapper;
+    
 
-        return Ok(new { message = "Registration sucessful" });
+
+    public AuthenticationController(IUserService userService, UserMapper userMapper)
+    {
+        _userService = userService;
+        _userMapper = userMapper;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto model)
+    {
+     
+        await _userService.RegisterUserAsync(model);
+        return StatusCode(200,"successfully add user");
     }
 
     [HttpPost("Login")]

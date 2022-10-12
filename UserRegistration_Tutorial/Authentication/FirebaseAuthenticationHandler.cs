@@ -47,9 +47,9 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
     {
         return new List<Claim>
         {
-            new("uid", claims["user_id"].ToString()),
-            new("email", claims["email"].ToString()),
-            new("name", claims["name"].ToString())
+            new("uid", claims["user_id"].ToString()!), 
+            new("email", claims["email"].ToString()!),
+            new("name", claims["name"].ToString()!)
         };
     }
 }

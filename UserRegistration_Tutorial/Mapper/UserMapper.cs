@@ -10,4 +10,15 @@ public class UserMapper
             DisplayName = model.UserName
         };
     }
+
+    public UserRecordArgs Map(RegisterDto model )
+    {
+        var userRecordArgs = new UserRecordArgs()
+        {
+            Email = model.Email,
+            Password = model.Password,
+            DisplayName = model.UserName
+        };
+     return userRecordArgs;
+    }
 }
