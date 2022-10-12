@@ -1,7 +1,7 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.OpenApi.Models;
 using UserRegistration_Tutorial.Authentication;
 using UserRegistration_Tutorial.Helpers;
