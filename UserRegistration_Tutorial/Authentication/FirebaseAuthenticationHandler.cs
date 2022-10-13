@@ -4,12 +4,14 @@ using FirebaseAdmin;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Authentication;
 
 public class FirebaseAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     private readonly FirebaseApp _firebaseApp;
+    public static User User { get; } = new();
 
 
     public FirebaseAuthenticationHandler(
@@ -20,7 +22,18 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
         FirebaseApp firebaseApp) : base(options, logger, encoder, clock)
     {
         _firebaseApp = firebaseApp;
+       
     }
+
+    private void setUser(IReadOnlyDictionary<string, object> claims)
+    {
+        User.Email = claims["email"].ToString()!;
+        User.Uid = claims["user_id"].ToString()!;
+        User.UserName = claims["name"].ToString()!;
+
+
+    }
+    
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
@@ -31,7 +44,7 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
         try
         {
             var firebaseToken = await FirebaseAuth.GetAuth(_firebaseApp).VerifyIdTokenAsync(token);
-
+            setUser(firebaseToken.Claims);
             return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new List<ClaimsIdentity>
             {
                 new(ToClaims(firebaseToken.Claims), nameof(FirebaseAuthenticationHandler))
@@ -45,6 +58,8 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
 
     private IEnumerable<Claim> ToClaims(IReadOnlyDictionary<string, object> claims)
     {
+        
+        
         return new List<Claim>
         {
             new("uid", claims["user_id"].ToString()!), 
@@ -52,4 +67,5 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
             new("name", claims["name"].ToString()!)
         };
     }
+    
 }
