@@ -50,8 +50,6 @@ public class EventsController : ControllerBase
     public async Task<IActionResult> GetEventById(string id)
     {
         var eventReadDto = await _eventService.GetEventsByIdAsync(id);
-
-
-        return Ok(eventReadDto);
+      return Ok(eventReadDto);
     }
 }
