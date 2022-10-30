@@ -1,67 +1,44 @@
-﻿
-using UserRegistration_Tutorial.Authentication;
-using UserRegistration_Tutorial.Interfaces;
+﻿using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Mapper;
-
-using FirebaseAuth = FirebaseAdmin.Auth.FirebaseAuth;
-
 
 namespace UserRegistration_Tutorial.Services;
 
 public class UserService : IUserService
 {
+    private readonly FirestoreDb _db;
     private readonly UserMapper _userMapper;
-    
-    public UserService(UserMapper userMapper)
+
+    public UserService(FirestoreDb db, UserMapper userMapper)
     {
+        _db = db;
         _userMapper = userMapper;
     }
-
-    // public async Task<IEnumerable<UserReadDto>> GetAllUsersAsync()
-    // {
-    //
-    //     // var pagedEnumerable = FirebaseAuth.DefaultInstance.ListUsersAsync(null);
-    //     //
-    //     //
-    //     //
-    //     //
-    //     //
-    //     // return pagedEnumerable
-    // }
-
-    public async Task DeleteUserAsync(string uid)
+    public Task<IEnumerable<UserReadDto>> GetAllUsersAsync()
     {
-        await FirebaseAuth.DefaultInstance.DeleteUserAsync(uid);
+        throw new NotImplementedException();
     }
 
-    public async Task<UserRecord> GetUserById(string uid)
+  
+
+    public async Task AddNewUser(RegisterDto model)
     {
-       
-        try
-        {
-            var userRecord = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
-            return userRecord;
-        }
-        catch
-        {
-            return null;
-        }
-        
-        
+        var docRef = _db.Collection("User").Document();
+        var addNewEvent = _userMapper.MapUser(model);
+        await docRef.SetAsync(addNewEvent);
     }
 
-    public async Task RegisterUserAsync(RegisterDto model)
+    public Task DeleteUserAsync(string id)
     {
-       
-        var addNewUser =  _userMapper.Map(model);
-        await FirebaseAuth.DefaultInstance.CreateUserAsync(addNewUser);
+        throw new NotImplementedException();
     }
 
-    public async Task UpdateUserAsync( UserUpdateInfoDto model)
+    public Task<bool> UpdateUserAsync(string id, UserUpdateInfoDto model)
     {
-        var user = FirebaseAuthenticationHandler.User;
-        var userFromDataBase = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(user.Email);
-        var updatedUser = _userMapper.Map(model, userFromDataBase);
-        userFromDataBase = await FirebaseAuth.DefaultInstance.UpdateUserAsync(updatedUser);
+        throw new NotImplementedException();
+    }
+
+    public Task<UserReadDto> GetUserById(string id)
+    {
+        throw new NotImplementedException();
     }
 }

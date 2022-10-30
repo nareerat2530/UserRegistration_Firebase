@@ -1,5 +1,9 @@
-﻿using Google.Api.Gax;
-using UserRegistration_Tutorial.Authentication;
+﻿
+
+using UserRegistration_Tutorial.DTO.Events;
+using UserRegistration_Tutorial.DTO.UserDto;
+using UserRegistration_Tutorial.Models.Events;
+using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Mapper;
 
@@ -14,7 +18,7 @@ public class UserMapper
         };
     }
 
-    public UserRecordArgs Map(RegisterDto model )
+    public UserRecordArgs Map(RegisterDto model)
     {
         var userRecordArgs = new UserRecordArgs()
         {
@@ -24,11 +28,20 @@ public class UserMapper
         };
      return userRecordArgs;
     }
+    public User MapUser(RegisterDto model)
+    {
+        var user = new User()
+        {
+            Email = model.Email,
+            UserName = model.UserName
+        };
+        return user;
+    }
 
-    public IEnumerable<UserReadDto> Map( List<ExportedUserRecord> _exportedUserRecord)
+    public IEnumerable<UserReadDto> Map( List<ExportedUserRecord> exportedUserRecord)
     {
 
-        return _exportedUserRecord.Select(user => new UserReadDto()
+        return exportedUserRecord.Select(user => new UserReadDto()
         {
             Uid = user.Uid,
             Email = user.Email,
@@ -36,5 +49,7 @@ public class UserMapper
         }).ToList();
 
 
+    
+   
     }
 }

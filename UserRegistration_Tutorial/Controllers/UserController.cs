@@ -9,18 +9,18 @@ namespace UserRegistration_Tutorial.Controllers;
 public class UserController : ControllerBase
 {
    
-    private readonly IUserService _userService;
+    private readonly IAuthService _authService;
     private readonly UserMapper _userMapper;
 
-    public UserController(IUserService userService, UserMapper userMapper)
+    public UserController(IAuthService authService, UserMapper userMapper)
     {
-        _userService = userService;
+        _authService = authService;
         _userMapper = userMapper;
     }
 
 
     [HttpGet]
-      // [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+        [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public async Task<IActionResult> GetAllUsersAsync()
     {
         
@@ -31,26 +31,27 @@ public class UserController : ControllerBase
 
 
     [HttpPut("Update")]
-    [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+    //[Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public async Task<IActionResult> UpdateUserAsync([FromBody] UserUpdateInfoDto model)
     {
-        await _userService.UpdateUserAsync(model);
+        await _authService.UpdateUserAsync(model);
         return StatusCode(200,"User updated successfully");
     }
 
 
     [HttpDelete("{id}")]
-     [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+      [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
     public async Task<IActionResult> DeleteAsync(string id)
     {
-        await _userService.DeleteUserAsync(id);
+        await _authService.DeleteUserAsync(id);
         return StatusCode(200, "User removed successfully");
     }
 
     [HttpGet("{uid?}")]
+   
     public async Task<IActionResult> GetUserById(string uid)
     {
-      var getUserById = await _userService.GetUserById(uid);
+      var getUserById = await _authService.GetUserById(uid);
       if (getUserById != null)
       {
           return Ok(getUserById);

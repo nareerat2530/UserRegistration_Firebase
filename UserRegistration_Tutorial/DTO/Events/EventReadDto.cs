@@ -8,4 +8,6 @@ public class EventReadDto
 
 
     public DateTime EventDate { get; set; }
+
+    public string UserId { get; set; }
 }

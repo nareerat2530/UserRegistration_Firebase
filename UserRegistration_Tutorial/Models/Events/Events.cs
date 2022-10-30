@@ -8,4 +8,5 @@ public class Events
     [FirestoreProperty] public string Description { get; set; } = string.Empty;
 
     [FirestoreProperty] public DateTime EventDate { get; set; }
+    [FirestoreProperty] public string   UserId { get; set; }
 }

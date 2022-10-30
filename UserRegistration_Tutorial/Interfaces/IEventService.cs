@@ -10,4 +10,5 @@ public interface IEventService
     Task DeleteEventsAsync(string id);
     Task<bool> UpdateEventAsync(string id, EventUpdateDto model);
     Task<EventReadDto> GetEventsByIdAsync(string id);
+   
 }

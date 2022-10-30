@@ -9,6 +9,7 @@ namespace UserRegistration_Tutorial.Controllers;
 public class EventsController : ControllerBase
 {
     private readonly IEventService _eventService;
+    
 
     public EventsController(IEventService eventService)
     {
@@ -18,6 +19,10 @@ public class EventsController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> AddEvent([FromBody] EventPostDto model)
     {
+        bool isAnyPropEmpty = model.GetType().GetProperties()
+            .Where(p => p.GetValue(model) is string) // selecting only string props
+            .Any(p => string.IsNullOrWhiteSpace((p.GetValue(model) as string)));
+        if (isAnyPropEmpty) return StatusCode(500, "Description cannot be empty");
         await _eventService.AddNewEvent(model);
 
 
@@ -52,4 +57,5 @@ public class EventsController : ControllerBase
         var eventReadDto = await _eventService.GetEventsByIdAsync(id);
       return Ok(eventReadDto);
     }
+   
 }

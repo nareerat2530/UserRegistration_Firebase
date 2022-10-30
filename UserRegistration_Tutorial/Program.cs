@@ -20,8 +20,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<AppSetting>(builder.Configuration.GetSection("Appsettings"));
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<EventsMapper>();
 builder.Services.AddScoped<UserMapper>();
 
@@ -89,7 +90,7 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader());
 
-// app.UseMiddleware<ExceptionHandlingMiddleware>();
+ //app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

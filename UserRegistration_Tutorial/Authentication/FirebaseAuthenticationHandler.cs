@@ -11,7 +11,8 @@ namespace UserRegistration_Tutorial.Authentication;
 public class FirebaseAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     private readonly FirebaseApp _firebaseApp;
-    public static User User { get; } = new();
+    private static FirestoreDb? _db;
+    public static User User { get; set; } = new();
 
 
     public FirebaseAuthenticationHandler(
@@ -19,32 +20,42 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
         ILoggerFactory logger,
         UrlEncoder encoder,
         ISystemClock clock,
-        FirebaseApp firebaseApp) : base(options, logger, encoder, clock)
+        FirebaseApp firebaseApp, FirestoreDb? db) : base(options, logger, encoder, clock)
     {
         _firebaseApp = firebaseApp;
-       
+        _db = db;
     }
 
-    private void setUser(IReadOnlyDictionary<string, object> claims)
+    public static async Task<User> GetUser()
+    {
+        var usersFromDb = _db.Collection("User");
+        var snapshot = await usersFromDb.GetSnapshotAsync();
+        var userList = snapshot.Documents.Select(x => x.ConvertTo<User>()).ToList();
+        return userList.FirstOrDefault(u => u.Email == User.Email);
+    }
+
+    private void SetUser(IReadOnlyDictionary<string, object> claims)
     {
         User.Email = claims["email"].ToString()!;
-        User.Uid = claims["user_id"].ToString()!;
         User.UserName = claims["name"].ToString()!;
 
-
+        
     }
     
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (!Context.Request.Headers.ContainsKey("Authorization")) return AuthenticateResult.NoResult();
+        if (!Context.Request.Headers.ContainsKey("Authorization"))
+        {
+            return AuthenticateResult.NoResult();
+        }
         string bearerToken = Context.Request.Headers["Authorization"];
         if (bearerToken == null || !bearerToken.StartsWith("Bearer ")) return AuthenticateResult.Fail("Invalid scheme");
         var token = bearerToken.Substring("Bearer ".Length);
         try
         {
             var firebaseToken = await FirebaseAuth.GetAuth(_firebaseApp).VerifyIdTokenAsync(token);
-            setUser(firebaseToken.Claims);
+            SetUser(firebaseToken.Claims);
             return AuthenticateResult.Success(new AuthenticationTicket(new ClaimsPrincipal(new List<ClaimsIdentity>
             {
                 new(ToClaims(firebaseToken.Claims), nameof(FirebaseAuthenticationHandler))

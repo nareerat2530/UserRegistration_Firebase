@@ -1,12 +1,10 @@
-﻿using UserRegistration_Tutorial.Models.Users;
-
-namespace UserRegistration_Tutorial.Interfaces;
+﻿namespace UserRegistration_Tutorial.Interfaces;
 
 public interface IUserService
 {
-    // Task<IEnumerable<UserReadDto>> GetAllUsersAsync();
-    Task<UserRecord> GetUserById(string uid);
-    Task RegisterUserAsync(RegisterDto model);
-    Task DeleteUserAsync(string uid);
-    Task UpdateUserAsync(UserUpdateInfoDto model);
+    Task<IEnumerable<UserReadDto>> GetAllUsersAsync();
+    Task AddNewUser(RegisterDto model);
+    Task DeleteUserAsync(string id);
+    Task<bool> UpdateUserAsync(string id, UserUpdateInfoDto model);
+    Task<UserReadDto> GetUserById(string id);
 }
