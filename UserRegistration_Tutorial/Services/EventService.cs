@@ -3,7 +3,6 @@ using UserRegistration_Tutorial.DTO.Events;
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Mapper;
 using UserRegistration_Tutorial.Models.Events;
-using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Services;
 
@@ -28,9 +27,9 @@ public class EventService : IEventService
         var userEvents = new List<Events>();
 
         var eventsList = snapshot.Documents.Select(x => x.ConvertTo<Events>()).ToList();
-         userEvents = eventsList.Where(x => x.UserId == user.Uid).ToList();
-        
-        var eventReadDtoList = _eventsMapper.Map(userEvents,user);
+        userEvents = eventsList.Where(x => x.UserId == user.Uid).ToList();
+
+        var eventReadDtoList = _eventsMapper.Map(userEvents, user);
         return eventReadDtoList;
     }
 
@@ -38,7 +37,7 @@ public class EventService : IEventService
     {
         var docRef = _db.Collection("calEvent").Document();
         var user = await FirebaseAuthenticationHandler.GetUser();
-   
+
         var addNewEvent = _eventsMapper.Map(eventPostDto, user);
         await docRef.SetAsync(addNewEvent);
     }
@@ -61,9 +60,10 @@ public class EventService : IEventService
             await dbRef.UpdateAsync(updateEvent);
             return true;
         }
-        return false;
 
+        return false;
     }
+
     public async Task<EventReadDto> GetEventsByIdAsync(string id)
     {
         var dbRef = _db.Collection("calEvent").Document(id);
@@ -71,13 +71,5 @@ public class EventService : IEventService
         var eventFromDB = snapshot.ConvertTo<Events>();
         var eventReadDto = _eventsMapper.Map(eventFromDB);
         return eventReadDto;
-
-
     }
-  
-
-
 }
-
-
-    

@@ -1,8 +1,6 @@
 ﻿using Firebase.Auth;
-
 using UserRegistration_Tutorial.Interfaces;
 using UserRegistration_Tutorial.Mapper;
-
 
 namespace UserRegistration_Tutorial.Controllers;
 
@@ -15,8 +13,6 @@ public class AuthenticationController : ControllerBase
     private readonly IUserService _userService;
 
 
-
-
     public AuthenticationController(IAuthService authService, UserMapper userMapper, IUserService userService)
     {
         _authService = authService;
@@ -27,10 +23,9 @@ public class AuthenticationController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto model)
     {
-     
         await _authService.RegisterUserAsync(model);
         await _userService.AddNewUser(model);
-        return StatusCode(200,"successfully add user");
+        return StatusCode(200, "successfully add user");
     }
 
     [HttpPost("Login")]

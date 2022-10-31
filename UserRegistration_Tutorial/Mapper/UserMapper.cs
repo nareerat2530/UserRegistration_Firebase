@@ -1,9 +1,4 @@
-﻿
-
-using UserRegistration_Tutorial.DTO.Events;
-using UserRegistration_Tutorial.DTO.UserDto;
-using UserRegistration_Tutorial.Models.Events;
-using UserRegistration_Tutorial.Models.Users;
+﻿using UserRegistration_Tutorial.Models.Users;
 
 namespace UserRegistration_Tutorial.Mapper;
 
@@ -20,17 +15,18 @@ public class UserMapper
 
     public UserRecordArgs Map(RegisterDto model)
     {
-        var userRecordArgs = new UserRecordArgs()
+        var userRecordArgs = new UserRecordArgs
         {
             Email = model.Email,
             Password = model.Password,
             DisplayName = model.UserName
         };
-     return userRecordArgs;
+        return userRecordArgs;
     }
+
     public User MapUser(RegisterDto model)
     {
-        var user = new User()
+        var user = new User
         {
             Email = model.Email,
             UserName = model.UserName
@@ -38,18 +34,13 @@ public class UserMapper
         return user;
     }
 
-    public IEnumerable<UserReadDto> Map( List<ExportedUserRecord> exportedUserRecord)
+    public IEnumerable<UserReadDto> Map(List<ExportedUserRecord> exportedUserRecord)
     {
-
-        return exportedUserRecord.Select(user => new UserReadDto()
+        return exportedUserRecord.Select(user => new UserReadDto
         {
             Uid = user.Uid,
             Email = user.Email,
             UserName = user.DisplayName
         }).ToList();
-
-
-    
-   
     }
 }

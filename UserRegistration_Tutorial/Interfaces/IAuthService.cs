@@ -1,6 +1,4 @@
-﻿using UserRegistration_Tutorial.Models.Users;
-
-namespace UserRegistration_Tutorial.Interfaces;
+﻿namespace UserRegistration_Tutorial.Interfaces;
 
 public interface IAuthService
 {

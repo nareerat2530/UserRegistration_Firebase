@@ -10,9 +10,8 @@ namespace UserRegistration_Tutorial.Authentication;
 
 public class FirebaseAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    private readonly FirebaseApp _firebaseApp;
     private static FirestoreDb? _db;
-    public static User User { get; set; } = new();
+    private readonly FirebaseApp _firebaseApp;
 
 
     public FirebaseAuthenticationHandler(
@@ -26,6 +25,8 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
         _db = db;
     }
 
+    public static User User { get; set; } = new();
+
     public static async Task<User> GetUser()
     {
         var usersFromDb = _db.Collection("User");
@@ -38,17 +39,12 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
     {
         User.Email = claims["email"].ToString()!;
         User.UserName = claims["name"].ToString()!;
-
-        
     }
-    
+
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (!Context.Request.Headers.ContainsKey("Authorization"))
-        {
-            return AuthenticateResult.NoResult();
-        }
+        if (!Context.Request.Headers.ContainsKey("Authorization")) return AuthenticateResult.NoResult();
         string bearerToken = Context.Request.Headers["Authorization"];
         if (bearerToken == null || !bearerToken.StartsWith("Bearer ")) return AuthenticateResult.Fail("Invalid scheme");
         var token = bearerToken.Substring("Bearer ".Length);
@@ -69,14 +65,11 @@ public class FirebaseAuthenticationHandler : AuthenticationHandler<Authenticatio
 
     private IEnumerable<Claim> ToClaims(IReadOnlyDictionary<string, object> claims)
     {
-        
-        
         return new List<Claim>
         {
-            new("uid", claims["user_id"].ToString()!), 
+            new("uid", claims["user_id"].ToString()!),
             new("email", claims["email"].ToString()!),
             new("name", claims["name"].ToString()!)
         };
     }
-    
 }

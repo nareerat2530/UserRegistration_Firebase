@@ -1,7 +1,6 @@
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication;
-
 using Microsoft.OpenApi.Models;
 using UserRegistration_Tutorial.Authentication;
 using UserRegistration_Tutorial.Helpers;
@@ -33,7 +32,7 @@ builder.Services.AddSingleton(FirebaseApp.Create(
         Credential =
             GoogleCredential.GetApplicationDefault()
     })
-) ;
+);
 builder.Services.AddSingleton(_ => new FirestoreDbBuilder
 {
     ProjectId = "firebase-with-dotnet",
@@ -90,7 +89,7 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader());
 
- //app.UseMiddleware<ExceptionHandlingMiddleware>();
+//app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

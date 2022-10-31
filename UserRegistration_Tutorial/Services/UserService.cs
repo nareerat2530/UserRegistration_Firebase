@@ -13,12 +13,12 @@ public class UserService : IUserService
         _db = db;
         _userMapper = userMapper;
     }
+
     public Task<IEnumerable<UserReadDto>> GetAllUsersAsync()
     {
         throw new NotImplementedException();
     }
 
-  
 
     public async Task AddNewUser(RegisterDto model)
     {
