@@ -41,6 +41,7 @@ builder.Services.AddSingleton(_ => new FirestoreDbBuilder
     // <-- service account json file
 }.Build());
 
+
 builder.Services.AddAuthentication("FirebaseAuthentication")
     .AddScheme<AuthenticationSchemeOptions, FirebaseAuthenticationHandler>("FirebaseAuthentication", _ => { });
 

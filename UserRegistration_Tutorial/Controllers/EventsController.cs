@@ -37,7 +37,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpDelete]
-    [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+   
     public async Task<IActionResult> DeleteEvent(string id)
     {
         await _eventService.DeleteEventsAsync(id);
@@ -45,7 +45,7 @@ public class EventsController : ControllerBase
     }
 
     [HttpPut]
-    [Authorize(AuthenticationSchemes = "FirebaseAuthentication")]
+    
     public async Task<IActionResult> UpdateAsync(string id, [FromBody] EventUpdateDto model)
     {
         if (await _eventService.UpdateEventAsync(id, model)) return StatusCode(200);

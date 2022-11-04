@@ -54,13 +54,5 @@ public class UserController : ControllerBase
 
         return NotFound();
     }
-
-
-    // [HttpGet("{email}")]
-    // public async Task<IActionResult> GetUserByEmail(string email)
-    // {
-    //     var userRecord = await FirebaseAuth.DefaultInstance.GetUserByEmailAsync(email);
-    //
-    //     return Ok(userRecord);
-    // }
+    
 }
